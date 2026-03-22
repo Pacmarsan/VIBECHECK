@@ -1,0 +1,157 @@
+import { motion } from 'motion/react';
+import { Star, ArrowRight } from 'lucide-react';
+
+export function MostVibey() {
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="w-full"
+    >
+      <header className="mb-16 md:mb-24 flex flex-col md:flex-row items-baseline gap-4">
+        <h1 className="text-5xl md:text-7xl font-headline italic text-on-surface leading-tight tracking-tight">
+          The Collective Pulse
+        </h1>
+        <p className="font-body text-primary-container/80 text-sm md:text-base uppercase tracking-[0.2em]">
+          Real-time resonance ranking
+        </p>
+      </header>
+
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24">
+        {/* Rank 2 */}
+        <div className="order-2 lg:order-1 flex flex-col justify-end">
+          <div className="glass-card rounded-xl p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500">
+            <div className="absolute -top-20 -right-20 w-48 h-48 vibe-pulse bg-secondary-container rounded-full"></div>
+            <div className="relative z-10">
+              <span className="font-headline text-4xl italic text-secondary-dim opacity-50 block mb-4">02</span>
+              <h3 className="font-headline text-3xl mb-2 text-on-surface">Villain Arc</h3>
+              <p className="font-body text-on-surface-variant text-sm mb-6 leading-relaxed">Systemic refusal of the status quo through high-fashion antagonism.</p>
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse</p>
+                  <p className="text-2xl font-body font-bold text-on-surface">1.8M</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs font-label uppercase tracking-widest text-secondary mb-1">Growth</p>
+                  <p className="text-lg font-body font-semibold text-secondary">+142%</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Rank 1 */}
+        <div className="order-1 lg:order-2 flex flex-col justify-end">
+          <div className="glass-card rounded-xl p-10 border border-primary/20 relative overflow-hidden group hover:bg-surface-variant/60 transition-all duration-700 min-h-[420px] flex flex-col justify-between">
+            <div className="absolute -top-24 -left-24 w-72 h-72 vibe-pulse bg-primary rounded-full animate-pulse"></div>
+            <div className="absolute -bottom-24 -right-24 w-64 h-64 vibe-pulse bg-secondary-container rounded-full"></div>
+            <div className="relative z-10">
+              <div className="flex justify-between items-start mb-6">
+                <span className="font-headline text-6xl italic text-primary block">01</span>
+                <Star className="text-primary scale-150" fill="currentColor" />
+              </div>
+              <h3 className="font-headline text-5xl mb-4 text-on-surface leading-none">Main Character Fatigue</h3>
+              <p className="font-body text-primary-fixed-dim text-lg mb-8 italic">The collective shift toward mundane background acting and gentle observation.</p>
+            </div>
+            <div className="relative z-10">
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="bg-black/20 p-4 rounded-lg">
+                  <p className="text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse Resonance</p>
+                  <p className="text-3xl font-body font-bold text-primary">3.4M</p>
+                </div>
+                <div className="bg-black/20 p-4 rounded-lg">
+                  <p className="text-xs font-label uppercase tracking-widest text-secondary mb-1">Velocity</p>
+                  <p className="text-3xl font-body font-bold text-secondary">+284%</p>
+                </div>
+              </div>
+              <button className="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary-container rounded-full font-bold uppercase tracking-widest text-sm hover:scale-[1.02] transition-transform active:scale-95">
+                Explore Vibe
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Rank 3 */}
+        <div className="order-3 lg:order-3 flex flex-col justify-end">
+          <div className="glass-card rounded-xl p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500">
+            <div className="absolute -bottom-20 -left-20 w-48 h-48 vibe-pulse bg-tertiary-container rounded-full"></div>
+            <div className="relative z-10">
+              <span className="font-headline text-4xl italic text-tertiary-dim opacity-50 block mb-4">03</span>
+              <h3 className="font-headline text-3xl mb-2 text-on-surface">Soft Life Crisis</h3>
+              <p className="font-body text-on-surface-variant text-sm mb-6 leading-relaxed">Intense anxiety caused by the inability to maintain aggressive rest rituals.</p>
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse</p>
+                  <p className="text-2xl font-body font-bold text-on-surface">942K</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs font-label uppercase tracking-widest text-tertiary mb-1">Growth</p>
+                  <p className="text-lg font-body font-semibold text-tertiary">+88%</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mb-32">
+        <div className="flex justify-between items-center mb-10 border-b border-white/5 pb-4">
+          <h2 className="font-headline text-3xl text-on-surface italic">The Trending Ethers</h2>
+          <div className="flex gap-4">
+            <button className="text-xs font-label tracking-widest text-secondary uppercase hover:text-secondary-dim transition-colors">By Resonance</button>
+            <span className="text-outline/30">|</span>
+            <button className="text-xs font-label tracking-widest text-on-surface-variant uppercase hover:text-on-surface transition-colors">By Velocity</button>
+          </div>
+        </div>
+        
+        <div className="space-y-4">
+          <ListItem rank="04" title="Neo-Pastoralism" desc="High-speed fiber internet in a thatched roof cottage." resonance="651K" trend="+56%" trendColor="text-secondary-dim" />
+          <ListItem rank="05" title="Data Nihilism" desc="Deleting everything that sparks joy to achieve digital void." resonance="412K" trend="+42%" trendColor="text-error-dim" />
+          <ListItem rank="06" title="Corporate Shamanism" desc="Using crystals to manifest 15-minute meeting durations." resonance="388K" trend="+31%" trendColor="text-tertiary-dim" />
+          <ListItem rank="07" title="Hyper-Nostalgia" desc="Missing a version of 2023 that never actually occurred." resonance="295K" trend="+22%" trendColor="text-secondary-dim" />
+          <ListItem rank="08" title="Post-Hype Minimal" desc="Luxury is now defined by the things you do not know about." resonance="188K" trend="+14%" trendColor="text-secondary-dim" />
+        </div>
+      </section>
+
+      <section className="mb-10 text-center py-20 bg-surface-container-lowest relative overflow-hidden rounded-[3rem]">
+        <div className="absolute inset-0 vibe-pulse bg-secondary/10 translate-y-1/2"></div>
+        <div className="relative z-10 px-6">
+          <h2 className="font-headline text-4xl md:text-5xl italic text-on-surface mb-6 max-w-2xl mx-auto leading-tight">
+            Every feeling is a frequency. What's your current broadcast?
+          </h2>
+          <button className="px-10 py-5 bg-surface-variant text-primary rounded-full font-body font-semibold hover:bg-white/10 transition-all border border-primary/20 backdrop-blur-md">
+            GENERATE PERSONAL VIBE REPORT
+          </button>
+        </div>
+      </section>
+    </motion.div>
+  );
+}
+
+function ListItem({ rank, title, desc, resonance, trend, trendColor }: any) {
+  return (
+    <div className="flex flex-col md:flex-row md:items-center justify-between p-6 bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl gap-6 md:gap-0">
+      <div className="flex items-center gap-8 flex-1">
+        <span className="font-headline text-2xl text-outline italic w-8">{rank}</span>
+        <div>
+          <h4 className="font-headline text-xl text-on-surface">{title}</h4>
+          <p className="font-body text-on-surface-variant text-sm italic">{desc}</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-12 text-right">
+        <div className="hidden sm:block">
+          <p className="text-[10px] font-label uppercase tracking-widest text-outline-variant mb-1">Resonance</p>
+          <p className="font-body font-bold text-primary-fixed-dim">{resonance}</p>
+        </div>
+        <div>
+          <p className="text-[10px] font-label uppercase tracking-widest text-outline-variant mb-1">Trend</p>
+          <p className={`font-body font-bold ${trendColor}`}>{trend}</p>
+        </div>
+        <button className="flex items-center justify-center p-2 rounded-full border border-outline-variant/30 hover:bg-primary/10 transition-colors">
+          <ArrowRight className="text-primary-dim" size={20} />
+        </button>
+      </div>
+    </div>
+  );
+}
