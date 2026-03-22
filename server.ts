@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import supabase from './db.js';
-import { processVibe } from './src/lib/gemini.js';
-import { generateId } from './src/lib/utils.js';
+import supabase from './db';
+import { processVibe } from './src/lib/gemini';
+import { generateId } from './src/lib/utils';
 
 dotenv.config();
 
