@@ -31,7 +31,7 @@ export function MostVibey() {
       className="w-full"
     >
       <header className="mb-16 md:mb-24 flex flex-col md:flex-row items-baseline gap-4">
-        <h1 className="text-5xl md:text-7xl font-headline italic text-on-surface leading-tight tracking-tight">
+        <h1 className="text-3xl sm:text-5xl md:text-7xl font-headline italic text-on-surface leading-tight tracking-tight">
           The Collective Pulse
         </h1>
         <p className="font-body text-primary-container/80 text-sm md:text-base uppercase tracking-[0.2em]">
@@ -45,13 +45,13 @@ export function MostVibey() {
           <div className="glass-card rounded-xl p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500 cursor-pointer" onClick={() => rank2.vibeLabel !== 'Void' && setSelectedVibe(rank2)}>
             <div className="absolute -top-20 -right-20 w-48 h-48 vibe-pulse bg-secondary-container rounded-full"></div>
             <div className="relative z-10">
-              <span className="font-headline text-4xl italic text-secondary-dim opacity-50 block mb-4">02</span>
-              <h3 className="font-headline text-3xl mb-2 text-on-surface line-clamp-2">{rank2.vibeLabel}</h3>
-              <p className="font-body text-on-surface-variant text-sm mb-6 leading-relaxed italic line-clamp-3">"{rank2.aiRemix}"</p>
+              <span className="font-headline text-3xl md:text-4xl italic text-secondary-dim opacity-50 block mb-4">02</span>
+              <h3 className="font-headline text-2xl md:text-3xl mb-2 text-on-surface line-clamp-2">{rank2.vibeLabel}</h3>
+              <p className="font-body text-on-surface-variant text-xs md:text-sm mb-6 leading-relaxed italic line-clamp-3">"{rank2.aiRemix}"</p>
               <div className="flex justify-between items-end">
                 <div>
                   <p className="text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse</p>
-                  <p className="text-2xl font-body font-bold text-on-surface">{(rank2.pulseCount || 0).toLocaleString()}</p>
+                  <p className="text-xl md:text-2xl font-body font-bold text-on-surface">{(rank2.pulseCount || 0).toLocaleString()}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-label uppercase tracking-widest text-secondary mb-1">Growth</p>
@@ -69,21 +69,21 @@ export function MostVibey() {
             <div className="absolute -bottom-24 -right-24 w-64 h-64 vibe-pulse bg-secondary-container rounded-full"></div>
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-6">
-                <span className="font-headline text-6xl italic text-primary block">01</span>
-                <Star className="text-primary scale-150" fill="currentColor" />
+                <span className="font-headline text-4xl sm:text-6xl italic text-primary block leading-none">01</span>
+                <Star className="text-primary scale-110 sm:scale-150" fill="currentColor" />
               </div>
-              <h3 className="font-headline text-5xl mb-4 text-on-surface leading-none line-clamp-2">{rank1.vibeLabel}</h3>
-              <p className="font-body text-primary-fixed-dim text-lg mb-8 italic line-clamp-3">"{rank1.aiRemix}"</p>
+              <h3 className="font-headline text-3xl sm:text-5xl mb-4 text-on-surface leading-none line-clamp-2">{rank1.vibeLabel}</h3>
+              <p className="font-body text-primary-fixed-dim text-base sm:text-lg mb-8 italic line-clamp-3">"{rank1.aiRemix}"</p>
             </div>
             <div className="relative z-10">
               <div className="grid grid-cols-2 gap-4 mb-8">
-                <div className="bg-black/20 p-4 rounded-lg">
-                  <p className="text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse Resonance</p>
-                  <p className="text-3xl font-body font-bold text-primary">{(rank1.pulseCount || 0).toLocaleString()}</p>
+                <div className="bg-black/20 p-3 sm:p-4 rounded-lg">
+                  <p className="text-[10px] font-label uppercase tracking-widest text-primary-container mb-1 leading-tight">Pulse Resonance</p>
+                  <p className="text-xl sm:text-3xl font-body font-bold text-primary">{(rank1.pulseCount || 0).toLocaleString()}</p>
                 </div>
-                <div className="bg-black/20 p-4 rounded-lg">
-                  <p className="text-xs font-label uppercase tracking-widest text-secondary mb-1">Velocity</p>
-                  <p className="text-3xl font-body font-bold text-secondary">{rank1.growthPercentage}</p>
+                <div className="bg-black/20 p-3 sm:p-4 rounded-lg">
+                  <p className="text-[10px] font-label uppercase tracking-widest text-secondary mb-1">Velocity</p>
+                  <p className="text-xl sm:text-3xl font-body font-bold text-secondary">{rank1.growthPercentage}</p>
                 </div>
               </div>
               <button className="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary-container rounded-full font-bold uppercase tracking-widest text-sm hover:scale-[1.02] transition-transform active:scale-95">
@@ -98,9 +98,9 @@ export function MostVibey() {
           <div className="glass-card rounded-xl p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500 cursor-pointer" onClick={() => rank3.vibeLabel !== 'Void' && setSelectedVibe(rank3)}>
             <div className="absolute -bottom-20 -left-20 w-48 h-48 vibe-pulse bg-tertiary-container rounded-full"></div>
             <div className="relative z-10">
-              <span className="font-headline text-4xl italic text-tertiary-dim opacity-50 block mb-4">03</span>
-              <h3 className="font-headline text-3xl mb-2 text-on-surface line-clamp-2">{rank3.vibeLabel}</h3>
-              <p className="font-body text-on-surface-variant text-sm mb-6 leading-relaxed italic line-clamp-3">"{rank3.aiRemix}"</p>
+              <span className="font-headline text-3xl md:text-4xl italic text-tertiary-dim opacity-50 block mb-4">03</span>
+              <h3 className="font-headline text-2xl md:text-3xl mb-2 text-on-surface line-clamp-2">{rank3.vibeLabel}</h3>
+              <p className="font-body text-on-surface-variant text-xs md:text-sm mb-6 leading-relaxed italic line-clamp-3">"{rank3.aiRemix}"</p>
               <div className="flex justify-between items-end">
                 <div>
                   <p className="text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse</p>
@@ -118,7 +118,7 @@ export function MostVibey() {
 
       <section className="mb-32">
         <div className="flex justify-between items-center mb-10 border-b border-white/5 pb-4">
-          <h2 className="font-headline text-3xl text-on-surface italic">The Trending Ethers</h2>
+          <h2 className="font-headline text-xl md:text-3xl text-on-surface italic">The Trending Ethers</h2>
           <div className="flex gap-4">
             <button className="text-xs font-label tracking-widest text-secondary uppercase hover:text-secondary-dim transition-colors">By Resonance</button>
             <span className="text-outline/30">|</span>
@@ -156,8 +156,8 @@ function ListItem({ rank, title, desc, resonance, trend, trendColor, onClick }: 
       <div className="flex items-center gap-8 flex-1">
         <span className="font-headline text-2xl text-outline italic w-8">{rank}</span>
         <div>
-          <h4 className="font-headline text-xl text-on-surface">{title}</h4>
-          <p className="font-body text-on-surface-variant text-sm italic">{desc}</p>
+          <h4 className="font-headline text-lg sm:text-xl text-on-surface">{title}</h4>
+          <p className="font-body text-on-surface-variant text-xs sm:text-sm italic">{desc}</p>
         </div>
       </div>
       <div className="flex items-center gap-12 text-right">

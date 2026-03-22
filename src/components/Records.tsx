@@ -55,7 +55,7 @@ export function Records() {
       exit={{ opacity: 0 }}
       className="w-full flex flex-col items-center pt-10"
     >
-      <h1 className="text-6xl md:text-8xl font-headline mb-12">RECORDS</h1>
+      <h1 className="text-4xl sm:text-6xl md:text-8xl font-headline mb-8 md:mb-12 tracking-tight">RECORDS</h1>
       
       <div className="w-full max-w-2xl relative mb-8">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" size={20} />
@@ -64,14 +64,14 @@ export function Records() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search past vibes..." 
-          className="w-full bg-surface-container-high border border-white/10 rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant outline-none focus:border-primary/50 transition-colors"
+          className="w-full bg-surface-container-high border border-white/10 rounded-xl py-3 md:py-4 pl-12 pr-4 text-sm md:text-base text-on-surface placeholder:text-on-surface-variant outline-none focus:border-primary/50 transition-colors"
         />
       </div>
 
-      <div className="flex gap-6 mb-16">
-        <button onClick={() => setFilter('All')} className={`px-6 py-2 rounded-full text-sm transition-colors ${filter === 'All' ? 'bg-surface-container-high text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}>All</button>
-        <button onClick={() => setFilter('Personal')} className={`px-6 py-2 rounded-full text-sm transition-colors ${filter === 'Personal' ? 'bg-surface-container-high text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}>Personal</button>
-        <button onClick={() => setFilter('Global')} className={`px-6 py-2 rounded-full text-sm transition-colors ${filter === 'Global' ? 'bg-surface-container-high text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}>Global</button>
+      <div className="flex flex-wrap justify-center gap-2 md:gap-6 mb-12 md:mb-16">
+        <button onClick={() => setFilter('All')} className={`px-4 md:px-6 py-2 rounded-full text-xs md:text-sm transition-colors ${filter === 'All' ? 'bg-surface-container-high text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}>All</button>
+        <button onClick={() => setFilter('Personal')} className={`px-4 md:px-6 py-2 rounded-full text-xs md:text-sm transition-colors ${filter === 'Personal' ? 'bg-surface-container-high text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}>Personal</button>
+        <button onClick={() => setFilter('Global')} className={`px-4 md:px-6 py-2 rounded-full text-xs md:text-sm transition-colors ${filter === 'Global' ? 'bg-surface-container-high text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}>Global</button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
@@ -85,7 +85,7 @@ export function Records() {
             className="glass-card rounded-2xl p-4 border border-secondary/20 hover:border-secondary/50 transition-colors cursor-pointer group shadow-[0_0_15px_rgba(253,119,196,0.1)] hover:shadow-[0_0_25px_rgba(253,119,196,0.2)] flex flex-col justify-between min-h-[160px]"
           >
             <div>
-              <h3 className="font-headline italic text-2xl mb-1">{record.vibeLabel}</h3>
+              <h3 className="font-headline italic text-xl md:text-2xl mb-1">{record.vibeLabel}</h3>
               <p className="text-xs text-on-surface-variant mb-3">{new Date(record.createdAt).toLocaleDateString()}</p>
             </div>
             <div className="flex items-center justify-between text-xs text-on-surface-variant mt-4">

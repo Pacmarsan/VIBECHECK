@@ -162,7 +162,7 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
           <Sparkles className="text-secondary opacity-80" size={32} />
         </div>
 
-        <h1 className="text-5xl md:text-6xl font-headline italic mb-6">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-headline italic mb-6 leading-tight">
           What is the current <span className="text-secondary">frequency</span> of your soul?
         </h1>
         <p className="font-body text-on-surface-variant mb-12 text-lg">
@@ -180,7 +180,7 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
               }
             }}
             placeholder="Inhale. Type. Exhale..."
-            className="w-full bg-transparent border-none outline-none resize-none h-32 text-lg placeholder:text-on-surface-variant/50"
+            className="w-full bg-transparent border-none outline-none resize-none h-24 md:h-32 text-base md:text-lg placeholder:text-on-surface-variant/50"
           />
           <div className="flex justify-between items-center pt-4 border-t border-white/5">
             <div className="flex gap-4 text-on-surface-variant">
@@ -198,7 +198,7 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
           </div>
         </div>
 
-        <div className="flex gap-4 mt-12 mb-24">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 mt-8 md:mt-12 mb-16 md:mb-24">
           {['Feeling nostalgic', 'Electric chaos', 'Deep focus'].map(tag => (
             <button key={tag} className="px-4 py-2 rounded-full border border-white/10 text-sm text-on-surface-variant hover:bg-white/5 transition-colors">
               {tag}
@@ -211,7 +211,7 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
       <div className="w-full max-w-5xl space-y-16 text-left">
         <section>
           <div className="flex items-center justify-between mb-2 pb-4 border-b border-white/5">
-            <h2 className="text-3xl font-headline italic text-on-surface">The Trending Ethers</h2>
+            <h2 className="text-xl md:text-3xl font-headline italic text-on-surface">The Trending Ethers</h2>
             <div className="flex items-center gap-4 text-[10px] font-label tracking-widest">
               <button 
                 onClick={() => setSortBy('resonance')}
@@ -238,7 +238,7 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
 
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-headline italic text-on-surface">New Vibes</h2>
+            <h2 className="text-xl md:text-2xl font-headline italic text-on-surface">New Vibes</h2>
             <span className="text-xs font-label uppercase tracking-widest text-primary-dim">Just In</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -335,7 +335,7 @@ function ProcessingPhase({ input }: { input: string; key?: React.Key }) {
         <Sparkles className="text-on-primary-container" size={40} />
       </div>
 
-      <h2 className="text-4xl md:text-5xl font-headline italic text-center mb-8 line-clamp-2">
+      <h2 className="text-2xl sm:text-4xl md:text-5xl font-headline italic text-center mb-8 line-clamp-2 px-4">
         "{input}"
       </h2>
       
@@ -375,7 +375,7 @@ function ProcessingPhase({ input }: { input: string; key?: React.Key }) {
                   <p className={`text-xs font-mono mb-1 ${isCompleted || isActive ? 'text-secondary' : 'text-on-surface-variant'}`}>
                     {isCompleted ? '04:22:18MS' : isActive ? 'PROCESSING' : 'PENDING'}
                   </p>
-                  <p className={`text-lg ${isPending ? 'text-on-surface-variant' : 'text-on-surface'}`}>
+                  <p className={`text-base md:text-lg ${isPending ? 'text-on-surface-variant' : 'text-on-surface'}`}>
                     {step}
                   </p>
                 </div>
@@ -466,10 +466,10 @@ function ResultPhase({ result }: { result: any; key?: React.Key }) {
         <span className="px-4 py-1 rounded-full border border-secondary/30 text-secondary text-xs font-label uppercase tracking-widest mb-8 inline-block bg-secondary/5 backdrop-blur-sm">
           Current Frequency
         </span>
-        <h1 className="text-6xl md:text-8xl font-headline italic mb-6 text-glow">
+        <h1 className="text-4xl sm:text-6xl md:text-8xl font-headline italic mb-6 text-glow leading-none">
           <ScrambleText text={result.vibeLabel} />
         </h1>
-        <p className="text-2xl font-headline italic text-primary-dim mb-8 opacity-80">
+        <p className="text-lg sm:text-xl md:text-2xl font-headline italic text-primary-dim mb-8 opacity-80 px-4">
           "{result.aiRemix}"
         </p>
         <div className="flex items-center justify-center gap-4">
@@ -479,11 +479,11 @@ function ResultPhase({ result }: { result: any; key?: React.Key }) {
         </div>
 
         {result.supportMessage && (
-          <div className="mt-12 relative max-w-2xl mx-auto p-6 rounded-2xl bg-secondary/10 border border-secondary/20 backdrop-blur-md">
+          <div className="mt-12 relative max-w-2xl mx-4 sm:mx-auto p-4 sm:p-6 rounded-2xl bg-secondary/10 border border-secondary/20 backdrop-blur-md">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#1A1A1A] border border-secondary/20 rounded-full text-[10px] font-label uppercase tracking-widest text-secondary flex items-center gap-1 shadow-lg">
                <Sparkles size={10} /> Message of Resonance
             </div>
-            <p className="font-body text-lg text-secondary-dim leading-relaxed text-center">
+            <p className="font-body text-sm sm:text-lg text-secondary-dim leading-relaxed text-center">
                {result.supportMessage}
             </p>
           </div>
@@ -497,13 +497,13 @@ function ResultPhase({ result }: { result: any; key?: React.Key }) {
             <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Heart className="text-secondary" fill="currentColor" size={20} />
             </div>
-            <h3 className="text-2xl font-headline italic mb-2">The Pulse</h3>
+            <h3 className="text-lg md:text-2xl font-headline italic mb-2">The Pulse</h3>
             <p className="text-sm text-on-surface-variant leading-relaxed">
               A collective shift in boundaries is emerging worldwide.
             </p>
           </div>
           <div className="mt-8">
-            <p className="text-5xl font-bold mb-2 tracking-tighter">{(result.pulseCount || 0).toLocaleString()}</p>
+            <p className="text-3xl md:text-5xl font-bold mb-2 tracking-tighter">{(result.pulseCount || 0).toLocaleString()}</p>
             <div className="flex items-center gap-2 text-[10px] font-label uppercase tracking-widest text-primary-container">
               <span>People feeling this</span>
               <span className="bg-tertiary-dim/20 text-tertiary-dim px-2 py-0.5 rounded-sm">{result.growthPercentage}</span>
@@ -514,13 +514,13 @@ function ResultPhase({ result }: { result: any; key?: React.Key }) {
         {/* Echo Chamber - Bento Row 1 */}
         <div className="md:col-span-3 lg:col-span-8 glass-card rounded-3xl p-8 border border-white/5 group hover:border-primary/20 transition-all bento-inner-shadow">
           <div className="flex justify-between items-center mb-10">
-            <h3 className="text-2xl font-headline italic">Echo Chamber</h3>
+            <h3 className="text-lg md:text-2xl font-headline italic">Echo Chamber</h3>
             <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant opacity-50">Live Consensus</span>
           </div>
           
-          <div className="space-y-6 border-l-2 border-primary/10 pl-8">
+          <div className="space-y-4 md:space-y-6 border-l-2 border-primary/10 pl-4 md:pl-8">
             {result.realVoices && result.realVoices.map((voice: string, idx: number) => (
-              <p key={idx} className="text-xl font-headline italic text-primary-dim group-hover:text-primary transition-colors leading-relaxed">
+              <p key={idx} className="text-sm md:text-xl font-headline italic text-primary-dim group-hover:text-primary transition-colors leading-relaxed">
                 "{voice}"
               </p>
             ))}
@@ -534,7 +534,7 @@ function ResultPhase({ result }: { result: any; key?: React.Key }) {
               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                 <Music size={14} className="text-primary" />
               </div>
-              <h3 className="text-2xl font-headline italic">Sonic Resonance</h3>
+              <h3 className="text-lg md:text-2xl font-headline italic">Sonic Resonance</h3>
             </div>
             <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant opacity-50">Recommended Tracks</span>
           </div>
@@ -550,10 +550,10 @@ function ResultPhase({ result }: { result: any; key?: React.Key }) {
                 <div className="w-12 h-12 shrink-0 rounded-xl bg-secondary-container/20 flex items-center justify-center text-secondary group-hover/track:scale-110 transition-transform shadow-lg">
                    <Music size={20} />
                 </div>
-                <div>
-                  <p className="font-headline italic text-on-surface text-xl leading-tight group-hover/track:text-secondary transition-colors">{track.title}</p>
-                  <p className="text-sm text-on-surface-variant font-body opacity-70 mt-1">{track.artist}</p>
-                </div>
+                  <div>
+                    <p className="font-headline italic text-on-surface text-base md:text-xl leading-tight group-hover/track:text-secondary transition-colors">{track.title}</p>
+                    <p className="text-[10px] md:text-sm text-on-surface-variant font-body opacity-70 mt-1">{track.artist}</p>
+                  </div>
               </a>
             ))}
           </div>
@@ -566,15 +566,15 @@ function ResultPhase({ result }: { result: any; key?: React.Key }) {
             <Sparkles className="text-secondary" size={20} />
           </div>
           <div>
-            <h4 className="font-headline italic text-xl">Amplify the Vibe</h4>
-            <p className="text-sm text-on-surface-variant">Let the collective know where you stand.</p>
+            <h4 className="font-headline italic text-lg md:text-xl">Amplify the Vibe</h4>
+            <p className="text-xs md:text-sm text-on-surface-variant">Let the collective know where you stand.</p>
           </div>
         </div>
         
         <div className="flex items-center gap-4">
           <button 
             onClick={handleNativeShare}
-            className="bg-primary text-on-primary-container px-6 py-3 rounded-full font-semibold hover:scale-105 transition-transform shadow-[0_0_20px_rgba(216,230,252,0.2)]"
+            className="bg-primary text-on-primary-container px-4 md:px-6 py-2 md:py-3 rounded-full text-sm md:text-base font-semibold hover:scale-105 transition-transform shadow-[0_0_20px_rgba(216,230,252,0.2)]"
           >
             Share this Vibe
           </button>

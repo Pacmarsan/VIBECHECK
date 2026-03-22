@@ -96,7 +96,7 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto glass-card rounded-3xl border border-white/10 shadow-2xl z-10 p-8 md:p-12 custom-scrollbar"
+          className="relative w-full max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto glass-card rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl z-10 p-5 sm:p-8 md:p-12 custom-scrollbar"
         >
           <VibeImageTemplate vibe={vibe} ref={templateRef} />
 
@@ -111,19 +111,19 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
             <span className="px-4 py-1 rounded-full border border-secondary/30 text-secondary text-xs font-label uppercase tracking-widest mb-6 inline-block">
               Recorded Frequency
             </span>
-            <h2 className="text-5xl md:text-7xl font-headline italic mb-4">
+            <h2 className="text-3xl sm:text-5xl md:text-7xl font-headline italic mb-4 leading-tight">
               {vibe.vibeLabel}
             </h2>
-            <p className="text-xl md:text-2xl font-headline italic text-primary-dim">
+            <p className="text-lg sm:text-xl md:text-2xl font-headline italic text-primary-dim px-4">
               "{vibe.aiRemix}"
             </p>
 
             {vibe.supportMessage && (
-              <div className="mt-8 relative max-w-2xl mx-auto p-6 rounded-2xl bg-secondary/10 border border-secondary/20 backdrop-blur-md text-left">
+              <div className="mt-8 relative max-w-2xl mx-auto p-4 sm:p-6 rounded-2xl bg-secondary/10 border border-secondary/20 backdrop-blur-md text-left">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-surface-container-highest border border-secondary/20 rounded-full text-[10px] font-label uppercase tracking-widest text-secondary flex items-center gap-1 shadow-lg">
                    <Sparkles size={10} /> Message of Resonance
                 </div>
-                <p className="font-body text-base text-secondary-dim leading-relaxed text-center">
+                <p className="font-body text-sm sm:text-base text-secondary-dim leading-relaxed text-center">
                    {vibe.supportMessage}
                 </p>
               </div>
@@ -141,15 +141,15 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
                 >
                   <Heart className={hasReacted ? "fill-secondary" : ""} size={24} />
                 </button>
-                <h3 className="text-xl font-headline italic mb-2 relative z-10">The Pulse</h3>
+                <h3 className="text-lg md:text-xl font-headline italic mb-2 relative z-10">The Pulse</h3>
               </div>
               <div className="mt-6 relative z-10">
                 <div className="flex items-end gap-3 mb-2">
-                  <p className="text-4xl font-bold text-secondary tracking-tight">{likes.toLocaleString()}</p>
+                  <p className="text-3xl md:text-4xl font-bold text-secondary tracking-tight">{likes.toLocaleString()}</p>
                   <p className="text-[10px] font-label uppercase tracking-widest text-secondary-dim pb-1.5">Real Resonance</p>
                 </div>
                 <div className="pt-4 border-t border-white/10 mt-4">
-                  <p className="text-2xl font-bold mb-1 tracking-tight text-on-surface-variant">{pulseCount.toLocaleString()}</p>
+                  <p className="text-xl md:text-2xl font-bold mb-1 tracking-tight text-on-surface-variant">{pulseCount.toLocaleString()}</p>
                   <div className="flex items-center gap-2 text-[10px] font-label uppercase tracking-widest text-primary-container">
                     <span>AI Global Pulse</span>
                     <span className="bg-tertiary-dim/20 text-tertiary-dim px-2 py-0.5 rounded">{vibe.growthPercentage}</span>
@@ -160,7 +160,7 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
 
             <div className="md:col-span-2 glass-card rounded-2xl p-6 border border-white/5 bg-surface-container-low/50">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-headline italic">Echo Chamber</h3>
+                <h3 className="text-lg md:text-xl font-headline italic">Echo Chamber</h3>
                 <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Archived Consensus</span>
               </div>
               
@@ -170,7 +170,7 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
                     <div className="absolute top-4 left-4 w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
                        <span className="text-[10px] text-primary font-bold">@anon</span>
                     </div>
-                    <p className="text-sm font-body text-on-surface-variant ml-10 leading-relaxed mb-3">
+                    <p className="text-xs md:text-sm font-body text-on-surface-variant ml-10 leading-relaxed mb-3">
                       {voice}
                     </p>
                     <div className="flex gap-4 ml-10">
@@ -186,7 +186,7 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
 
           <div className="w-full mb-8 glass-card rounded-2xl p-6 border border-white/5 bg-surface-container-low/50">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-headline italic">Sonic Resonance</h3>
+              <h3 className="text-lg md:text-xl font-headline italic">Sonic Resonance</h3>
               <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Recommended Tracks</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -202,7 +202,7 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
                      <Music size={16} />
                   </div>
                   <div className="overflow-hidden">
-                    <p className="font-headline italic text-on-surface text-base leading-tight truncate group-hover:text-secondary transition-colors">{track.title}</p>
+                    <p className="font-headline italic text-on-surface text-sm sm:text-base leading-tight truncate group-hover:text-secondary transition-colors">{track.title}</p>
                     <p className="text-[10px] text-on-surface-variant font-body truncate">{track.artist}</p>
                   </div>
                 </a>
@@ -211,37 +211,39 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
             </div>
           </div>
 
-          <div className="flex justify-center gap-4 mt-8 pt-6 border-t border-white/10">
+          <div className="flex flex-wrap justify-center gap-3 mt-8 pt-6 border-t border-white/10">
             <motion.button 
               whileTap={{ scale: 0.95 }}
               onClick={handleDownloadImage}
               disabled={isExporting}
-              className={`h-12 px-6 rounded-full border border-white/10 flex items-center justify-center gap-2 hover:bg-white/5 text-on-surface transition-colors ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`h-10 md:h-12 px-4 md:px-6 rounded-full border border-white/10 flex items-center justify-center gap-2 hover:bg-white/5 text-on-surface transition-colors ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {isExporting ? <Loader2 size={16} className="animate-spin text-secondary" /> : <ImageIcon size={16} className="text-secondary" />}
-              <span className="text-sm font-semibold">Save Card</span>
+              <span className="text-xs md:text-sm font-semibold">Save Card</span>
             </motion.button>
-            <motion.button 
-              whileTap={{ scale: 0.95 }}
-              onClick={handleTwitterShare}
-              className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#1DA1F2]/20 hover:text-[#1DA1F2] text-on-surface-variant transition-colors"
-            >
-              <Twitter size={20} />
-            </motion.button>
-            <motion.button 
-              whileTap={{ scale: 0.95 }}
-              onClick={handleFacebookShare}
-              className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#4267B2]/20 hover:text-[#4267B2] text-on-surface-variant transition-colors"
-            >
-              <Facebook size={20} />
-            </motion.button>
-            <motion.button 
-              whileTap={{ scale: 0.95 }}
-              onClick={handleCopyLink}
-              className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/10 text-on-surface-variant transition-colors relative"
-            >
-              {copied ? <Check size={20} className="text-secondary" /> : <Link size={20} />}
-            </motion.button>
+            <div className="flex gap-2">
+              <motion.button 
+                whileTap={{ scale: 0.95 }}
+                onClick={handleTwitterShare}
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#1DA1F2]/20 hover:text-[#1DA1F2] text-on-surface-variant transition-colors"
+              >
+                <Twitter size={18} />
+              </motion.button>
+              <motion.button 
+                whileTap={{ scale: 0.95 }}
+                onClick={handleFacebookShare}
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#4267B2]/20 hover:text-[#4267B2] text-on-surface-variant transition-colors"
+              >
+                <Facebook size={18} />
+              </motion.button>
+              <motion.button 
+                whileTap={{ scale: 0.95 }}
+                onClick={handleCopyLink}
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/10 text-on-surface-variant transition-colors relative"
+              >
+                {copied ? <Check size={18} className="text-secondary" /> : <Link size={18} />}
+              </motion.button>
+            </div>
           </div>
         </motion.div>
       </div>
