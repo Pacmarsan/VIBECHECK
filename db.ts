@@ -2,7 +2,9 @@ import Database from 'better-sqlite3';
 import path from 'path';
 
 // Create or open the SQLite database
-const db = new Database('vibecheck.db', { verbose: console.log });
+// Vercel serverless functions have a read-only filesystem, except for /tmp
+const dbPath = process.env.VERCEL ? '/tmp/vibecheck.db' : 'vibecheck.db';
+const db = new Database(dbPath, { verbose: console.log });
 
 // Initialize tables
 db.exec(`

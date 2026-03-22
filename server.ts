@@ -114,6 +114,11 @@ app.post('/api/vibes/react', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`[Backend] Express server running on port ${PORT}`);
-});
+
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`[Backend] Express server running on port ${PORT}`);
+  });
+}
+
+export default app;
