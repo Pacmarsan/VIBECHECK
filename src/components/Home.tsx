@@ -4,6 +4,65 @@ import React, { useState, useEffect, useRef } from 'react';
 import { toPng } from 'html-to-image';
 import { VibeModal } from './VibeModal';
 import { VibeImageTemplate } from './VibeImageTemplate';
+import { useMotionValue, useSpring, useTransform } from 'motion/react';
+
+// --- Helper Components for Premium Feel ---
+
+function ScrambleText({ text }: { text: string }) {
+  const [display, setDisplay] = useState('');
+  const chars = '!<>-_\\/[]{}—=+*^?#________';
+
+  useEffect(() => {
+    let frame = 0;
+    const interval = setInterval(() => {
+      let scrambled = text
+        .split('')
+        .map((char, i) => {
+          if (char === ' ') return ' ';
+          if (frame > i * 2 + 10) return char;
+          return chars[Math.floor(Math.random() * chars.length)];
+        })
+        .join('');
+      setDisplay(scrambled);
+      if (frame > text.length * 2 + 20) clearInterval(interval);
+      frame++;
+    }, 40);
+    return () => clearInterval(interval);
+  }, [text]);
+
+  return <>{display}</>;
+}
+
+function Magnetic({ children }: { children: React.ReactNode }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 150, damping: 15 });
+  const springY = useSpring(y, { stiffness: 150, damping: 15 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const { clientX, clientY, currentTarget } = e;
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    x.set((clientX - centerX) * 0.4);
+    y.set((clientY - centerY) * 0.4);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      style={{ x: springX, y: springY }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 type HomePhase = 'input' | 'processing' | 'result';
 
@@ -52,7 +111,7 @@ export function Home() {
   );
 }
 
-function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void> | void, key?: string }) {
+function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void> | void; key?: React.Key }) {
   const [text, setText] = useState('');
   const [allVibes, setAllVibes] = useState<any[]>([]);
   const [trendingVibes, setTrendingVibes] = useState<any[]>([]);
@@ -114,6 +173,12 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
           <textarea 
             value={text}
             onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (text.trim()) onTransmit(text);
+              }
+            }}
             placeholder="Inhale. Type. Exhale..."
             className="w-full bg-transparent border-none outline-none resize-none h-32 text-lg placeholder:text-on-surface-variant/50"
           />
@@ -122,12 +187,14 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
               <button className="hover:text-primary transition-colors"><Mic size={20} /></button>
               <button className="hover:text-primary transition-colors"><Paperclip size={20} /></button>
             </div>
-            <button 
-              onClick={() => { if(text.trim()) onTransmit(text) }}
-              className="bg-primary text-on-primary-container px-6 py-2.5 rounded-full font-semibold flex items-center gap-2 hover:scale-105 transition-transform active:scale-95 shadow-[0_0_20px_rgba(216,230,252,0.3)]"
-            >
-              Transmit <Sparkles size={16} />
-            </button>
+            <Magnetic>
+              <button 
+                onClick={() => { if(text.trim()) onTransmit(text) }}
+                className="bg-primary text-on-primary-container px-6 py-2.5 rounded-full font-semibold flex items-center gap-2 hover:bg-white transition-colors active:scale-95 shadow-[0_0_20px_rgba(216,230,252,0.3)] group"
+              >
+                Transmit <Sparkles size={16} className="group-hover:rotate-12 transition-transform" />
+              </button>
+            </Magnetic>
           </div>
         </div>
 
@@ -188,7 +255,7 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
   );
 }
 
-function VibeCard({ vibe, delay, onClick, key }: { vibe: any, delay: number, onClick: () => void, key?: any }) {
+function VibeCard({ vibe, delay, onClick }: { vibe: any; delay: number; onClick: () => void; key?: React.Key }) {
   const [likes, setLikes] = useState(vibe.likes || 0);
   const [hasLiked, setHasLiked] = useState(false);
 
@@ -238,7 +305,7 @@ function VibeCard({ vibe, delay, onClick, key }: { vibe: any, delay: number, onC
   );
 }
 
-function ProcessingPhase({ input, key }: { input: string, key?: string }) {
+function ProcessingPhase({ input }: { input: string; key?: React.Key }) {
   const steps = [
     "Scanning Reddit for sentiment...",
     "Clustering emotional signals...",
@@ -321,7 +388,7 @@ function ProcessingPhase({ input, key }: { input: string, key?: string }) {
   );
 }
 
-function ResultPhase({ result, key }: { result: any, key?: string }) {
+function ResultPhase({ result }: { result: any; key?: React.Key }) {
   const [copied, setCopied] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const templateRef = useRef<HTMLDivElement>(null);
@@ -396,13 +463,13 @@ function ResultPhase({ result, key }: { result: any, key?: string }) {
       <VibeImageTemplate vibe={result} ref={templateRef} />
 
       <div className="text-center mb-16">
-        <span className="px-4 py-1 rounded-full border border-secondary/30 text-secondary text-xs font-label uppercase tracking-widest mb-8 inline-block">
+        <span className="px-4 py-1 rounded-full border border-secondary/30 text-secondary text-xs font-label uppercase tracking-widest mb-8 inline-block bg-secondary/5 backdrop-blur-sm">
           Current Frequency
         </span>
-        <h1 className="text-6xl md:text-8xl font-headline italic mb-6">
-          {result.vibeLabel}
+        <h1 className="text-6xl md:text-8xl font-headline italic mb-6 text-glow">
+          <ScrambleText text={result.vibeLabel} />
         </h1>
-        <p className="text-2xl font-headline italic text-primary-dim mb-8">
+        <p className="text-2xl font-headline italic text-primary-dim mb-8 opacity-80">
           "{result.aiRemix}"
         </p>
         <div className="flex items-center justify-center gap-4">
@@ -423,63 +490,73 @@ function ResultPhase({ result, key }: { result: any, key?: string }) {
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-6">
-        <div className="glass-card rounded-2xl p-8 border border-white/5 flex flex-col justify-between">
+      <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6 w-full mb-6">
+        {/* The Pulse Card - Bento Row 1 */}
+        <div className="md:col-span-3 lg:col-span-4 glass-card rounded-3xl p-8 border border-white/5 flex flex-col justify-between group hover:border-secondary/30 transition-all bento-inner-shadow">
           <div>
-            <Heart className="text-secondary mb-6" fill="currentColor" />
+            <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Heart className="text-secondary" fill="currentColor" size={20} />
+            </div>
             <h3 className="text-2xl font-headline italic mb-2">The Pulse</h3>
             <p className="text-sm text-on-surface-variant leading-relaxed">
               A collective shift in boundaries is emerging worldwide.
             </p>
           </div>
-          <div className="mt-12">
-            <p className="text-4xl font-bold mb-2">{(result.pulseCount || 0).toLocaleString()}</p>
-            <div className="flex items-center gap-2 text-xs font-label uppercase tracking-widest text-primary-container">
+          <div className="mt-8">
+            <p className="text-5xl font-bold mb-2 tracking-tighter">{(result.pulseCount || 0).toLocaleString()}</p>
+            <div className="flex items-center gap-2 text-[10px] font-label uppercase tracking-widest text-primary-container">
               <span>People feeling this</span>
-              <span className="bg-tertiary-dim/20 text-tertiary-dim px-2 py-0.5 rounded">{result.growthPercentage}</span>
+              <span className="bg-tertiary-dim/20 text-tertiary-dim px-2 py-0.5 rounded-sm">{result.growthPercentage}</span>
             </div>
           </div>
         </div>
 
-        <div className="md:col-span-2 glass-card rounded-2xl p-8 border border-white/5">
-          <div className="flex justify-between items-center mb-8">
+        {/* Echo Chamber - Bento Row 1 */}
+        <div className="md:col-span-3 lg:col-span-8 glass-card rounded-3xl p-8 border border-white/5 group hover:border-primary/20 transition-all bento-inner-shadow">
+          <div className="flex justify-between items-center mb-10">
             <h3 className="text-2xl font-headline italic">Echo Chamber</h3>
-            <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Live Consensus</span>
+            <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant opacity-50">Live Consensus</span>
           </div>
           
-          <div className="space-y-6 border-l-2 border-white/10 pl-6">
+          <div className="space-y-6 border-l-2 border-primary/10 pl-8">
             {result.realVoices && result.realVoices.map((voice: string, idx: number) => (
-              <p key={idx} className="text-lg font-headline italic text-primary-dim">
+              <p key={idx} className="text-xl font-headline italic text-primary-dim group-hover:text-primary transition-colors leading-relaxed">
                 "{voice}"
               </p>
             ))}
           </div>
         </div>
-      </div>
 
-      <div className="w-full mb-8 glass-card rounded-2xl p-8 border border-white/5">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-headline italic">Sonic Resonance</h3>
-          <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Recommended Tracks</span>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {result.musicRecommendations && result.musicRecommendations.map((track: any, idx: number) => (
-            <a 
-              key={idx} 
-              href={`https://open.spotify.com/search/${encodeURIComponent(track.title + ' ' + track.artist)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 bg-white/5 p-4 rounded-xl hover:bg-white/10 hover:border-white/20 border border-transparent transition-all group"
-            >
-              <div className="w-10 h-10 shrink-0 rounded-full bg-secondary-container/30 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform shadow-[0_0_10px_rgba(253,119,196,0.1)] group-hover:shadow-[0_0_20px_rgba(253,119,196,0.2)]">
-                 <Music size={18} />
+        {/* Sonic Resonance - Bento Row 2 Full Width */}
+        <div className="md:col-span-6 lg:col-span-12 glass-card rounded-3xl p-8 border border-white/5 bento-inner-shadow">
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                <Music size={14} className="text-primary" />
               </div>
-              <div>
-                <p className="font-headline italic text-on-surface text-lg leading-tight group-hover:text-secondary transition-colors">{track.title}</p>
-                <p className="text-xs text-on-surface-variant font-body">{track.artist}</p>
-              </div>
-            </a>
-          ))}
+              <h3 className="text-2xl font-headline italic">Sonic Resonance</h3>
+            </div>
+            <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant opacity-50">Recommended Tracks</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {result.musicRecommendations && result.musicRecommendations.map((track: any, idx: number) => (
+              <a 
+                key={idx} 
+                href={`https://open.spotify.com/search/${encodeURIComponent(track.title + ' ' + track.artist)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-5 bg-white/[0.03] p-5 rounded-2xl hover:bg-white/[0.08] hover:border-white/10 border border-transparent transition-all group/track"
+              >
+                <div className="w-12 h-12 shrink-0 rounded-xl bg-secondary-container/20 flex items-center justify-center text-secondary group-hover/track:scale-110 transition-transform shadow-lg">
+                   <Music size={20} />
+                </div>
+                <div>
+                  <p className="font-headline italic text-on-surface text-xl leading-tight group-hover/track:text-secondary transition-colors">{track.title}</p>
+                  <p className="text-sm text-on-surface-variant font-body opacity-70 mt-1">{track.artist}</p>
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 
