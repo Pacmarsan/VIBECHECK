@@ -1,7 +1,28 @@
 import { motion } from 'motion/react';
 import { Star, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { VibeModal } from './VibeModal';
 
 export function MostVibey() {
+  const [vibes, setVibes] = useState<any[]>([]);
+  const [selectedVibe, setSelectedVibe] = useState<any>(null);
+
+  useEffect(() => {
+    fetch('/api/vibes?limit=20')
+      .then(res => res.json())
+      .then(data => {
+        // Sort by resonance for "Most Vibey"
+        const sorted = [...data].sort((a, b) => (b.pulseCount || 0) - (a.pulseCount || 0));
+        setVibes(sorted);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  const rank1 = vibes[0] || { vibeLabel: 'Void', aiRemix: 'Nothing here.', pulseCount: 0, growthPercentage: '0%' };
+  const rank2 = vibes[1] || { vibeLabel: 'Void', aiRemix: 'Nothing here.', pulseCount: 0, growthPercentage: '0%' };
+  const rank3 = vibes[2] || { vibeLabel: 'Void', aiRemix: 'Nothing here.', pulseCount: 0, growthPercentage: '0%' };
+  const theRest = vibes.slice(3, 8);
+
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -21,20 +42,20 @@ export function MostVibey() {
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24">
         {/* Rank 2 */}
         <div className="order-2 lg:order-1 flex flex-col justify-end">
-          <div className="glass-card rounded-xl p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500">
+          <div className="glass-card rounded-xl p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500 cursor-pointer" onClick={() => rank2.vibeLabel !== 'Void' && setSelectedVibe(rank2)}>
             <div className="absolute -top-20 -right-20 w-48 h-48 vibe-pulse bg-secondary-container rounded-full"></div>
             <div className="relative z-10">
               <span className="font-headline text-4xl italic text-secondary-dim opacity-50 block mb-4">02</span>
-              <h3 className="font-headline text-3xl mb-2 text-on-surface">Villain Arc</h3>
-              <p className="font-body text-on-surface-variant text-sm mb-6 leading-relaxed">Systemic refusal of the status quo through high-fashion antagonism.</p>
+              <h3 className="font-headline text-3xl mb-2 text-on-surface line-clamp-2">{rank2.vibeLabel}</h3>
+              <p className="font-body text-on-surface-variant text-sm mb-6 leading-relaxed italic line-clamp-3">"{rank2.aiRemix}"</p>
               <div className="flex justify-between items-end">
                 <div>
                   <p className="text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse</p>
-                  <p className="text-2xl font-body font-bold text-on-surface">1.8M</p>
+                  <p className="text-2xl font-body font-bold text-on-surface">{(rank2.pulseCount || 0).toLocaleString()}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-label uppercase tracking-widest text-secondary mb-1">Growth</p>
-                  <p className="text-lg font-body font-semibold text-secondary">+142%</p>
+                  <p className="text-lg font-body font-semibold text-secondary">{rank2.growthPercentage}</p>
                 </div>
               </div>
             </div>
@@ -43,7 +64,7 @@ export function MostVibey() {
 
         {/* Rank 1 */}
         <div className="order-1 lg:order-2 flex flex-col justify-end">
-          <div className="glass-card rounded-xl p-10 border border-primary/20 relative overflow-hidden group hover:bg-surface-variant/60 transition-all duration-700 min-h-[420px] flex flex-col justify-between">
+          <div className="glass-card rounded-xl p-10 border border-primary/20 relative overflow-hidden group hover:bg-surface-variant/60 transition-all duration-700 min-h-[420px] flex flex-col justify-between cursor-pointer" onClick={() => rank1.vibeLabel !== 'Void' && setSelectedVibe(rank1)}>
             <div className="absolute -top-24 -left-24 w-72 h-72 vibe-pulse bg-primary rounded-full animate-pulse"></div>
             <div className="absolute -bottom-24 -right-24 w-64 h-64 vibe-pulse bg-secondary-container rounded-full"></div>
             <div className="relative z-10">
@@ -51,18 +72,18 @@ export function MostVibey() {
                 <span className="font-headline text-6xl italic text-primary block">01</span>
                 <Star className="text-primary scale-150" fill="currentColor" />
               </div>
-              <h3 className="font-headline text-5xl mb-4 text-on-surface leading-none">Main Character Fatigue</h3>
-              <p className="font-body text-primary-fixed-dim text-lg mb-8 italic">The collective shift toward mundane background acting and gentle observation.</p>
+              <h3 className="font-headline text-5xl mb-4 text-on-surface leading-none line-clamp-2">{rank1.vibeLabel}</h3>
+              <p className="font-body text-primary-fixed-dim text-lg mb-8 italic line-clamp-3">"{rank1.aiRemix}"</p>
             </div>
             <div className="relative z-10">
               <div className="grid grid-cols-2 gap-4 mb-8">
                 <div className="bg-black/20 p-4 rounded-lg">
                   <p className="text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse Resonance</p>
-                  <p className="text-3xl font-body font-bold text-primary">3.4M</p>
+                  <p className="text-3xl font-body font-bold text-primary">{(rank1.pulseCount || 0).toLocaleString()}</p>
                 </div>
                 <div className="bg-black/20 p-4 rounded-lg">
                   <p className="text-xs font-label uppercase tracking-widest text-secondary mb-1">Velocity</p>
-                  <p className="text-3xl font-body font-bold text-secondary">+284%</p>
+                  <p className="text-3xl font-body font-bold text-secondary">{rank1.growthPercentage}</p>
                 </div>
               </div>
               <button className="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary-container rounded-full font-bold uppercase tracking-widest text-sm hover:scale-[1.02] transition-transform active:scale-95">
@@ -74,20 +95,20 @@ export function MostVibey() {
 
         {/* Rank 3 */}
         <div className="order-3 lg:order-3 flex flex-col justify-end">
-          <div className="glass-card rounded-xl p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500">
+          <div className="glass-card rounded-xl p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500 cursor-pointer" onClick={() => rank3.vibeLabel !== 'Void' && setSelectedVibe(rank3)}>
             <div className="absolute -bottom-20 -left-20 w-48 h-48 vibe-pulse bg-tertiary-container rounded-full"></div>
             <div className="relative z-10">
               <span className="font-headline text-4xl italic text-tertiary-dim opacity-50 block mb-4">03</span>
-              <h3 className="font-headline text-3xl mb-2 text-on-surface">Soft Life Crisis</h3>
-              <p className="font-body text-on-surface-variant text-sm mb-6 leading-relaxed">Intense anxiety caused by the inability to maintain aggressive rest rituals.</p>
+              <h3 className="font-headline text-3xl mb-2 text-on-surface line-clamp-2">{rank3.vibeLabel}</h3>
+              <p className="font-body text-on-surface-variant text-sm mb-6 leading-relaxed italic line-clamp-3">"{rank3.aiRemix}"</p>
               <div className="flex justify-between items-end">
                 <div>
                   <p className="text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse</p>
-                  <p className="text-2xl font-body font-bold text-on-surface">942K</p>
+                  <p className="text-2xl font-body font-bold text-on-surface">{(rank3.pulseCount || 0).toLocaleString()}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-label uppercase tracking-widest text-tertiary mb-1">Growth</p>
-                  <p className="text-lg font-body font-semibold text-tertiary">+88%</p>
+                  <p className="text-lg font-body font-semibold text-tertiary">{rank3.growthPercentage}</p>
                 </div>
               </div>
             </div>
@@ -106,32 +127,32 @@ export function MostVibey() {
         </div>
         
         <div className="space-y-4">
-          <ListItem rank="04" title="Neo-Pastoralism" desc="High-speed fiber internet in a thatched roof cottage." resonance="651K" trend="+56%" trendColor="text-secondary-dim" />
-          <ListItem rank="05" title="Data Nihilism" desc="Deleting everything that sparks joy to achieve digital void." resonance="412K" trend="+42%" trendColor="text-error-dim" />
-          <ListItem rank="06" title="Corporate Shamanism" desc="Using crystals to manifest 15-minute meeting durations." resonance="388K" trend="+31%" trendColor="text-tertiary-dim" />
-          <ListItem rank="07" title="Hyper-Nostalgia" desc="Missing a version of 2023 that never actually occurred." resonance="295K" trend="+22%" trendColor="text-secondary-dim" />
-          <ListItem rank="08" title="Post-Hype Minimal" desc="Luxury is now defined by the things you do not know about." resonance="188K" trend="+14%" trendColor="text-secondary-dim" />
+          {theRest.length === 0 && <p className="text-outline-variant italic">The ethers are quiet. Generate more vibes to populate the rankings.</p>}
+          {theRest.map((v: any, i: number) => (
+            <ListItem 
+              key={v.id} 
+              rank={`0${i + 4}`} 
+              title={v.vibeLabel} 
+              desc={`"${v.aiRemix}"`} 
+              resonance={(v.pulseCount || 0).toLocaleString()} 
+              trend={v.growthPercentage} 
+              trendColor="text-secondary-dim" 
+              onClick={() => setSelectedVibe(v)}
+            />
+          ))}
         </div>
       </section>
 
-      <section className="mb-10 text-center py-20 bg-surface-container-lowest relative overflow-hidden rounded-[3rem]">
-        <div className="absolute inset-0 vibe-pulse bg-secondary/10 translate-y-1/2"></div>
-        <div className="relative z-10 px-6">
-          <h2 className="font-headline text-4xl md:text-5xl italic text-on-surface mb-6 max-w-2xl mx-auto leading-tight">
-            Every feeling is a frequency. What's your current broadcast?
-          </h2>
-          <button className="px-10 py-5 bg-surface-variant text-primary rounded-full font-body font-semibold hover:bg-white/10 transition-all border border-primary/20 backdrop-blur-md">
-            GENERATE PERSONAL VIBE REPORT
-          </button>
-        </div>
-      </section>
+
+
+      {selectedVibe && <VibeModal vibe={selectedVibe} onClose={() => setSelectedVibe(null)} />}
     </motion.div>
   );
 }
 
-function ListItem({ rank, title, desc, resonance, trend, trendColor }: any) {
+function ListItem({ rank, title, desc, resonance, trend, trendColor, onClick }: any) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between p-6 bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl gap-6 md:gap-0">
+    <div onClick={onClick} className="flex flex-col md:flex-row md:items-center justify-between p-6 bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl gap-6 md:gap-0 cursor-pointer">
       <div className="flex items-center gap-8 flex-1">
         <span className="font-headline text-2xl text-outline italic w-8">{rank}</span>
         <div>

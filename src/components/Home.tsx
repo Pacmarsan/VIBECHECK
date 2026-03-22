@@ -1,43 +1,92 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { Mic, Paperclip, Sparkles, CheckCircle2, Loader2, Heart, Share, Bookmark, Copy, Upload, Twitter, Facebook, Link, Check } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Mic, Paperclip, Sparkles, ArrowRight, Loader2, CheckCircle2, Heart, Download, Share2, Twitter, Facebook, Link, Check, Music, Image as ImageIcon } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { toPng } from 'html-to-image';
+import { VibeModal } from './VibeModal';
+import { VibeImageTemplate } from './VibeImageTemplate';
 
 type HomePhase = 'input' | 'processing' | 'result';
 
 export function Home() {
   const [phase, setPhase] = useState<HomePhase>('input');
+  const [vibeResult, setVibeResult] = useState<any>(null);
+  const [currentInput, setCurrentInput] = useState('');
 
-  const handleTransmit = () => {
+  useEffect(() => {
+    if (!localStorage.getItem('vibecheck_userId')) {
+      localStorage.setItem('vibecheck_userId', Math.random().toString(36).substring(2, 15));
+    }
+  }, []);
+
+  const handleTransmit = async (input: string) => {
+    setCurrentInput(input);
     setPhase('processing');
-    // Simulate processing time
-    setTimeout(() => {
+    try {
+      const userId = localStorage.getItem('vibecheck_userId') || 'anon';
+      const res = await fetch('/api/vibecheck', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input, userId })
+      });
+      const data = await res.json();
+      setVibeResult(data);
+    } catch (err) {
+      console.error(err);
+      setVibeResult({
+        vibeLabel: "Void Signal", pulseCount: 0, growthPercentage: "0%",
+        realVoices: ["Connection failed."], aiRemix: "The server is offline."
+      });
+    } finally {
       setPhase('result');
-    }, 4000);
+    }
   };
 
   return (
     <div className="flex-grow flex flex-col items-center justify-start w-full relative pt-8 md:pt-16">
       <AnimatePresence mode="wait">
         {phase === 'input' && <InputPhase key="input" onTransmit={handleTransmit} />}
-        {phase === 'processing' && <ProcessingPhase key="processing" />}
-        {phase === 'result' && <ResultPhase key="result" />}
+        {phase === 'processing' && <ProcessingPhase key="processing" input={currentInput} />}
+        {phase === 'result' && vibeResult && <ResultPhase key="result" result={vibeResult} />}
       </AnimatePresence>
     </div>
   );
 }
 
-function InputPhase({ onTransmit }: { onTransmit: () => void }) {
-  const trendingVibes = [
-    { title: 'Main Character Fatigue', pulse: '3.4M', metric: '+284%', metricColor: 'text-secondary' },
-    { title: 'Villain Arc', pulse: '1.8M', metric: '+142%', metricColor: 'text-secondary' },
-    { title: 'Soft Life Crisis', pulse: '942K', metric: '+88%', metricColor: 'text-tertiary-dim' },
-  ];
+function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void> | void, key?: string }) {
+  const [text, setText] = useState('');
+  const [allVibes, setAllVibes] = useState<any[]>([]);
+  const [trendingVibes, setTrendingVibes] = useState<any[]>([]);
+  const [newVibes, setNewVibes] = useState<any[]>([]);
+  const [selectedVibe, setSelectedVibe] = useState<any>(null);
+  const [sortBy, setSortBy] = useState<'resonance' | 'velocity'>('resonance');
 
-  const newVibes = [
-    { title: 'Digital Nomad Zen', pulse: '12K', metric: 'Just now', metricColor: 'text-primary-dim' },
-    { title: 'Neo-Pastoralism', pulse: '8.4K', metric: '2m ago', metricColor: 'text-primary-dim' },
-    { title: 'Data Nihilism', pulse: '5.1K', metric: '15m ago', metricColor: 'text-primary-dim' },
-  ];
+  useEffect(() => {
+    fetch('/api/vibes?limit=20')
+      .then(res => res.json())
+      .then(data => {
+        setAllVibes(data);
+        setNewVibes([...data].slice(0, 3));
+      })
+      .catch(err => console.error("Failed to fetch vibes", err));
+  }, []);
+
+  useEffect(() => {
+    if (allVibes.length === 0) return;
+
+    let sorted = [...allVibes];
+    if (sortBy === 'resonance') {
+      sorted.sort((a, b) => 
+        ((b.likes || 0) + (b.pulseCount || 0)) - ((a.likes || 0) + (a.pulseCount || 0))
+      );
+    } else {
+      sorted.sort((a, b) => {
+        const valA = parseInt(a.growthPercentage?.replace(/[+%]/g, '') || '0');
+        const valB = parseInt(b.growthPercentage?.replace(/[+%]/g, '') || '0');
+        return valB - valA;
+      });
+    }
+    setTrendingVibes(sorted.slice(0, 3));
+  }, [allVibes, sortBy]);
 
   return (
     <motion.div 
@@ -63,6 +112,8 @@ function InputPhase({ onTransmit }: { onTransmit: () => void }) {
 
         <div className="w-full glass-card rounded-3xl p-6 border border-white/5 flex flex-col gap-4">
           <textarea 
+            value={text}
+            onChange={(e) => setText(e.target.value)}
             placeholder="Inhale. Type. Exhale..."
             className="w-full bg-transparent border-none outline-none resize-none h-32 text-lg placeholder:text-on-surface-variant/50"
           />
@@ -72,7 +123,7 @@ function InputPhase({ onTransmit }: { onTransmit: () => void }) {
               <button className="hover:text-primary transition-colors"><Paperclip size={20} /></button>
             </div>
             <button 
-              onClick={onTransmit}
+              onClick={() => { if(text.trim()) onTransmit(text) }}
               className="bg-primary text-on-primary-container px-6 py-2.5 rounded-full font-semibold flex items-center gap-2 hover:scale-105 transition-transform active:scale-95 shadow-[0_0_20px_rgba(216,230,252,0.3)]"
             >
               Transmit <Sparkles size={16} />
@@ -92,25 +143,28 @@ function InputPhase({ onTransmit }: { onTransmit: () => void }) {
       {/* Trending & New Vibes Sections */}
       <div className="w-full max-w-5xl space-y-16 text-left">
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-headline italic text-on-surface">Trending Vibes</h2>
-            <span className="text-xs font-label uppercase tracking-widest text-secondary">Top 3</span>
+          <div className="flex items-center justify-between mb-2 pb-4 border-b border-white/5">
+            <h2 className="text-3xl font-headline italic text-on-surface">The Trending Ethers</h2>
+            <div className="flex items-center gap-4 text-[10px] font-label tracking-widest">
+              <button 
+                onClick={() => setSortBy('resonance')}
+                className={`uppercase transition-colors ${sortBy === 'resonance' ? 'text-secondary' : 'text-on-surface-variant hover:text-on-surface'}`}
+              >
+                By Resonance
+              </button>
+              <span className="text-white/10">|</span>
+              <button 
+                onClick={() => setSortBy('velocity')}
+                className={`uppercase transition-colors ${sortBy === 'velocity' ? 'text-secondary' : 'text-on-surface-variant hover:text-on-surface'}`}
+              >
+                By Velocity
+              </button>
+            </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {trendingVibes.length === 0 && <p className="text-on-surface-variant italic">No data collected yet. Be the first.</p>}
             {trendingVibes.map((vibe, i) => (
-              <motion.div 
-                key={vibe.title}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * i }}
-                className="glass-card rounded-2xl p-6 border border-white/5 hover:border-white/10 transition-colors group cursor-pointer"
-              >
-                <h3 className="font-headline italic text-xl mb-3 group-hover:text-primary transition-colors">{vibe.title}</h3>
-                <div className="flex justify-between items-center text-xs font-label uppercase tracking-widest text-on-surface-variant">
-                  <span>{vibe.pulse} Pulse</span>
-                  <span className={vibe.metricColor}>{vibe.metric}</span>
-                </div>
-              </motion.div>
+              <VibeCard key={vibe.id} vibe={vibe} delay={0.1 * i} onClick={() => setSelectedVibe(vibe)} />
             ))}
           </div>
         </section>
@@ -121,29 +175,70 @@ function InputPhase({ onTransmit }: { onTransmit: () => void }) {
             <span className="text-xs font-label uppercase tracking-widest text-primary-dim">Just In</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {newVibes.length === 0 && <p className="text-on-surface-variant italic">The ethers are quiet.</p>}
             {newVibes.map((vibe, i) => (
-              <motion.div 
-                key={vibe.title}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + (0.1 * i) }}
-                className="glass-card rounded-2xl p-6 border border-white/5 hover:border-white/10 transition-colors group cursor-pointer"
-              >
-                <h3 className="font-headline italic text-xl mb-3 group-hover:text-primary transition-colors">{vibe.title}</h3>
-                <div className="flex justify-between items-center text-xs font-label uppercase tracking-widest text-on-surface-variant">
-                  <span>{vibe.pulse} Pulse</span>
-                  <span className={vibe.metricColor}>{vibe.metric}</span>
-                </div>
-              </motion.div>
+              <VibeCard key={vibe.id} vibe={vibe} delay={0.2 + (0.1 * i)} onClick={() => setSelectedVibe(vibe)} />
             ))}
           </div>
         </section>
+      </div>
+
+      {selectedVibe && <VibeModal vibe={selectedVibe} onClose={() => setSelectedVibe(null)} />}
+    </motion.div>
+  );
+}
+
+function VibeCard({ vibe, delay, onClick, key }: { vibe: any, delay: number, onClick: () => void, key?: any }) {
+  const [likes, setLikes] = useState(vibe.likes || 0);
+  const [hasLiked, setHasLiked] = useState(false);
+
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (hasLiked) return;
+    
+    setLikes((prev: number) => prev + 1);
+    setHasLiked(true);
+    
+    const userId = localStorage.getItem('vibecheck_userId') || 'anon';
+    try {
+      await fetch('/api/vibes/react', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ vibeId: vibe.id, userId, reactionType: 'heart' })
+      });
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <motion.div 
+      onClick={onClick}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+      className="glass-card rounded-2xl p-6 border border-white/5 hover:border-white/10 transition-colors group cursor-pointer relative"
+    >
+      <div className="absolute top-4 right-4 z-10">
+        <button 
+          onClick={handleLike}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${hasLiked ? 'bg-secondary/20 text-secondary scale-105' : 'bg-white/5 text-on-surface-variant hover:bg-white/10 hover:text-on-surface hover:scale-105'}`}
+        >
+          <Heart size={14} className={hasLiked ? "fill-secondary text-secondary" : ""} />
+          {likes > 0 ? likes.toLocaleString() : '0'}
+        </button>
+      </div>
+
+      <h3 className="font-headline italic text-xl mb-3 pr-16 group-hover:text-primary transition-colors line-clamp-1">{vibe.vibeLabel}</h3>
+      <div className="flex justify-between items-center text-xs font-label uppercase tracking-widest text-on-surface-variant">
+        <span>{(vibe.pulseCount || 0).toLocaleString()} Pulse</span>
+        <span className="text-secondary">{vibe.growthPercentage}</span>
       </div>
     </motion.div>
   );
 }
 
-function ProcessingPhase() {
+function ProcessingPhase({ input, key }: { input: string, key?: string }) {
   const steps = [
     "Scanning Reddit for sentiment...",
     "Clustering emotional signals...",
@@ -173,8 +268,8 @@ function ProcessingPhase() {
         <Sparkles className="text-on-primary-container" size={40} />
       </div>
 
-      <h2 className="text-4xl md:text-5xl font-headline italic text-center mb-8">
-        "Deeply melancholy yet hopeful at dawn"
+      <h2 className="text-4xl md:text-5xl font-headline italic text-center mb-8 line-clamp-2">
+        "{input}"
       </h2>
       
       <p className="font-label text-xs uppercase tracking-widest text-primary-container mb-12">
@@ -226,11 +321,33 @@ function ProcessingPhase() {
   );
 }
 
-function ResultPhase() {
+function ResultPhase({ result, key }: { result: any, key?: string }) {
   const [copied, setCopied] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const templateRef = useRef<HTMLDivElement>(null);
 
   const shareUrl = window.location.href;
-  const shareText = "My soul's frequency is 'Villain Arc (Self-Care Edition)'. What's yours? #VibeCheckAI";
+  const shareText = `My soul's frequency is '${result.vibeLabel}'. What's yours? #VibeCheckAI`;
+
+  const handleDownloadImage = async () => {
+    if (!templateRef.current) return;
+    try {
+      setIsExporting(true);
+      const dataUrl = await toPng(templateRef.current, {
+        cacheBust: true,
+        backgroundColor: '#0A0A0B',
+        pixelRatio: 2
+      });
+      const link = document.createElement('a');
+      link.download = `vibecheck-${result.vibeLabel.toLowerCase().replace(/\s+/g, '-')}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Failed to export image', err);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const handleCopyLink = async () => {
     try {
@@ -239,6 +356,22 @@ function ResultPhase() {
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy', err);
+    }
+  };
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'VibeCheck AI',
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch (err) {
+        console.error('Share failed', err);
+      }
+    } else {
+      handleCopyLink();
     }
   };
 
@@ -260,21 +393,34 @@ function ResultPhase() {
     >
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] vibe-pulse bg-secondary-container/10 rounded-full -z-10"></div>
 
+      <VibeImageTemplate vibe={result} ref={templateRef} />
+
       <div className="text-center mb-16">
         <span className="px-4 py-1 rounded-full border border-secondary/30 text-secondary text-xs font-label uppercase tracking-widest mb-8 inline-block">
           Current Frequency
         </span>
         <h1 className="text-6xl md:text-8xl font-headline italic mb-6">
-          Villain Arc <span className="text-on-surface-variant text-4xl md:text-6xl">(Self-Care Edition)</span>
+          {result.vibeLabel}
         </h1>
         <p className="text-2xl font-headline italic text-primary-dim mb-8">
-          "Silence is the loudest way to say I'm choosing myself."
+          "{result.aiRemix}"
         </p>
         <div className="flex items-center justify-center gap-4">
           <div className="h-px w-12 bg-white/10"></div>
           <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Sentient Glow Engine</span>
           <div className="h-px w-12 bg-white/10"></div>
         </div>
+
+        {result.supportMessage && (
+          <div className="mt-12 relative max-w-2xl mx-auto p-6 rounded-2xl bg-secondary/10 border border-secondary/20 backdrop-blur-md">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#1A1A1A] border border-secondary/20 rounded-full text-[10px] font-label uppercase tracking-widest text-secondary flex items-center gap-1 shadow-lg">
+               <Sparkles size={10} /> Message of Resonance
+            </div>
+            <p className="font-body text-lg text-secondary-dim leading-relaxed text-center">
+               {result.supportMessage}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-6">
@@ -287,10 +433,10 @@ function ResultPhase() {
             </p>
           </div>
           <div className="mt-12">
-            <p className="text-4xl font-bold mb-2">42.5k</p>
+            <p className="text-4xl font-bold mb-2">{(result.pulseCount || 0).toLocaleString()}</p>
             <div className="flex items-center gap-2 text-xs font-label uppercase tracking-widest text-primary-container">
               <span>People feeling this</span>
-              <span className="bg-tertiary-dim/20 text-tertiary-dim px-2 py-0.5 rounded">~12%</span>
+              <span className="bg-tertiary-dim/20 text-tertiary-dim px-2 py-0.5 rounded">{result.growthPercentage}</span>
             </div>
           </div>
         </div>
@@ -302,16 +448,38 @@ function ResultPhase() {
           </div>
           
           <div className="space-y-6 border-l-2 border-white/10 pl-6">
-            <p className="text-lg font-headline italic text-primary-dim">
-              "I'm just tired of being the 'nice' one. The peace I found in saying 'no' is terrifyingly beautiful."
-            </p>
-            <p className="text-lg font-headline italic text-primary-dim">
-              "Finally setting boundaries and it feels... strange but good. Like I'm meeting myself for the first time."
-            </p>
-            <p className="text-lg font-headline italic text-primary-dim">
-              "The arc isn't about hurting others; it's about refusing to hurt myself anymore."
-            </p>
+            {result.realVoices && result.realVoices.map((voice: string, idx: number) => (
+              <p key={idx} className="text-lg font-headline italic text-primary-dim">
+                "{voice}"
+              </p>
+            ))}
           </div>
+        </div>
+      </div>
+
+      <div className="w-full mb-8 glass-card rounded-2xl p-8 border border-white/5">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-2xl font-headline italic">Sonic Resonance</h3>
+          <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant">Recommended Tracks</span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {result.musicRecommendations && result.musicRecommendations.map((track: any, idx: number) => (
+            <a 
+              key={idx} 
+              href={`https://open.spotify.com/search/${encodeURIComponent(track.title + ' ' + track.artist)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 bg-white/5 p-4 rounded-xl hover:bg-white/10 hover:border-white/20 border border-transparent transition-all group"
+            >
+              <div className="w-10 h-10 shrink-0 rounded-full bg-secondary-container/30 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform shadow-[0_0_10px_rgba(253,119,196,0.1)] group-hover:shadow-[0_0_20px_rgba(253,119,196,0.2)]">
+                 <Music size={18} />
+              </div>
+              <div>
+                <p className="font-headline italic text-on-surface text-lg leading-tight group-hover:text-secondary transition-colors">{track.title}</p>
+                <p className="text-xs text-on-surface-variant font-body">{track.artist}</p>
+              </div>
+            </a>
+          ))}
         </div>
       </div>
 
@@ -327,10 +495,22 @@ function ResultPhase() {
         </div>
         
         <div className="flex items-center gap-4">
-          <button className="bg-primary text-on-primary-container px-6 py-3 rounded-full font-semibold hover:scale-105 transition-transform shadow-[0_0_20px_rgba(216,230,252,0.2)]">
+          <button 
+            onClick={handleNativeShare}
+            className="bg-primary text-on-primary-container px-6 py-3 rounded-full font-semibold hover:scale-105 transition-transform shadow-[0_0_20px_rgba(216,230,252,0.2)]"
+          >
             Share this Vibe
           </button>
           <div className="flex gap-2">
+            <motion.button 
+              whileTap={{ scale: 0.95 }}
+              onClick={handleDownloadImage}
+              disabled={isExporting}
+              className={`h-12 px-6 rounded-full border border-white/10 flex items-center justify-center gap-2 hover:bg-white/5 transition-colors ${isExporting ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              {isExporting ? <Loader2 size={16} className="animate-spin" /> : <ImageIcon size={16} />}
+              <span className="text-sm font-semibold hidden md:inline">Save Card</span>
+            </motion.button>
             <motion.button 
               whileTap={{ scale: 0.95 }}
               onClick={handleTwitterShare}
