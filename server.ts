@@ -1,15 +1,24 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import supabase from './db';
-import { processVibe } from './src/lib/gemini';
-import { generateId } from './src/lib/utils';
+import supabase from './db.js';
+import { processVibe } from './src/lib/gemini.js';
+import { generateId } from './src/lib/utils.js';
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Diagnostic endpoint to verify Vercel booted the Express app correctly
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    environment: process.env.VERCEL ? 'vercel' : 'local',
+    supabaseConfigured: !!process.env.SUPABASE_URL && !!process.env.SUPABASE_SERVICE_ROLE_KEY
+  });
+});
 
 // API Endpoint to handle VibeCheck logic
 app.post('/api/vibecheck', async (req, res) => {
