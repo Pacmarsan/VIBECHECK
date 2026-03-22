@@ -1,27 +1,42 @@
-try {
-  const app = require('../server').default;
-  
-  // Add a dedicated health check for Vercel diagnostics
-  app.get('/api/health', (req, res) => {
-    res.json({ 
-      status: 'ok', 
-      env: process.env.VERCEL ? 'vercel' : 'local',
-      dbPath: process.env.VERCEL ? '/tmp/vibecheck.db' : 'vibecheck.db'
-    });
-  });
+const express = require('express');
+const app = express();
+app.use(express.json());
 
-  module.exports = app;
-} catch (error: any) {
-  console.error('Vercel Initialization Error:', error);
-  const express = require('express');
-  const app = express();
-  app.all('*', (req, res) => {
+// Add a super-simple health check that doesn't depend on root server
+app.get('/api/health', (req, res) => {
+  try {
+     // Check if we can even load the root server
+     require('../server');
+     res.json({ 
+       status: 'ok', 
+       env: 'vercel',
+       message: 'Backend logic loaded successfully' 
+     });
+  } catch (err: any) {
+     res.status(500).json({ 
+       status: 'error',
+       phase: 'logic_load',
+       message: err.message,
+       stack: err.stack 
+     });
+  }
+});
+
+// Proxy all other /api calls to the main server app
+app.all('/api/*', (req, res) => {
+  try {
+    const mainApp = require('../server').default;
+    // We need to manually handle the routing here if we're wrapping it
+    // Actually, on Vercel, we can just export the mainApp directly if it's correct.
+    return mainApp(req, res);
+  } catch (err: any) {
     res.status(500).json({ 
-      error: 'Initialization failed', 
-      message: error.message,
-      stack: error.stack
+      error: 'Dispatch failed', 
+      message: err.message 
     });
-  });
-  module.exports = app;
-}
+  }
+});
+
+module.exports = app;
+
 
