@@ -55,16 +55,16 @@ export function Records() {
       exit={{ opacity: 0 }}
       className="w-full flex flex-col items-center pt-10"
     >
-      <h1 className="text-4xl sm:text-6xl md:text-8xl font-headline mb-8 md:mb-12 tracking-tight">RECORDS</h1>
+      <h1 className="text-3xl sm:text-6xl md:text-8xl font-headline mb-6 md:mb-12 tracking-tight">RECORDS</h1>
       
-      <div className="w-full max-w-2xl relative mb-8">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" size={20} />
+      <div className="w-full max-w-2xl relative mb-6 md:mb-8">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" size={18} />
         <input 
           type="text" 
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search past vibes..." 
-          className="w-full bg-surface-container-high border border-white/10 rounded-xl py-3 md:py-4 pl-12 pr-4 text-sm md:text-base text-on-surface placeholder:text-on-surface-variant outline-none focus:border-primary/50 transition-colors"
+          className="w-full bg-surface-container-high border border-white/10 rounded-xl py-2.5 md:py-4 pl-12 pr-4 text-sm md:text-base text-on-surface placeholder:text-on-surface-variant outline-none focus:border-primary/50 transition-colors"
         />
       </div>
 

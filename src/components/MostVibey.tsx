@@ -30,11 +30,11 @@ export function MostVibey() {
       exit={{ opacity: 0 }}
       className="w-full"
     >
-      <header className="mb-16 md:mb-24 flex flex-col md:flex-row items-baseline gap-4">
+      <header className="mb-12 md:mb-24 flex flex-col md:flex-row items-baseline gap-4">
         <h1 className="text-3xl sm:text-5xl md:text-7xl font-headline italic text-on-surface leading-tight tracking-tight">
           The Collective Pulse
         </h1>
-        <p className="font-body text-primary-container/80 text-sm md:text-base uppercase tracking-[0.2em]">
+        <p className="font-body text-primary-container/80 text-xs md:text-base uppercase tracking-[0.2em]">
           Real-time resonance ranking
         </p>
       </header>
@@ -42,20 +42,20 @@ export function MostVibey() {
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24">
         {/* Rank 2 */}
         <div className="order-2 lg:order-1 flex flex-col justify-end">
-          <div className="glass-card rounded-xl p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500 cursor-pointer" onClick={() => rank2.vibeLabel !== 'Void' && setSelectedVibe(rank2)}>
-            <div className="absolute -top-20 -right-20 w-48 h-48 vibe-pulse bg-secondary-container rounded-full"></div>
+          <div className="glass-card rounded-xl p-5 sm:p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500 cursor-pointer" onClick={() => rank2.vibeLabel !== 'Void' && setSelectedVibe(rank2)}>
+            <div className="absolute -top-16 -right-16 w-32 h-32 md:-top-20 md:-right-20 md:w-48 md:h-48 vibe-pulse bg-secondary-container rounded-full"></div>
             <div className="relative z-10">
-              <span className="font-headline text-3xl md:text-4xl italic text-secondary-dim opacity-50 block mb-4">02</span>
-              <h3 className="font-headline text-2xl md:text-3xl mb-2 text-on-surface line-clamp-2">{rank2.vibeLabel}</h3>
-              <p className="font-body text-on-surface-variant text-xs md:text-sm mb-6 leading-relaxed italic line-clamp-3">"{rank2.aiRemix}"</p>
+              <span className="font-headline text-2xl md:text-4xl italic text-secondary-dim opacity-50 block mb-2 md:mb-4">02</span>
+              <h3 className="font-headline text-xl md:text-3xl mb-1 md:mb-2 text-on-surface line-clamp-2">{rank2.vibeLabel}</h3>
+              <p className="font-body text-on-surface-variant text-xs md:text-sm mb-4 md:mb-6 leading-relaxed italic line-clamp-3">"{rank2.aiRemix}"</p>
               <div className="flex justify-between items-end">
                 <div>
-                  <p className="text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse</p>
-                  <p className="text-xl md:text-2xl font-body font-bold text-on-surface">{(rank2.pulseCount || 0).toLocaleString()}</p>
+                  <p className="text-[10px] md:text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse</p>
+                  <p className="text-lg md:text-2xl font-body font-bold text-on-surface">{(rank2.pulseCount || 0).toLocaleString()}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs font-label uppercase tracking-widest text-secondary mb-1">Growth</p>
-                  <p className="text-lg font-body font-semibold text-secondary">{rank2.growthPercentage}</p>
+                  <p className="text-[10px] md:text-xs font-label uppercase tracking-widest text-secondary mb-1">Growth</p>
+                  <p className="text-base font-body font-semibold text-secondary">{rank2.growthPercentage}</p>
                 </div>
               </div>
             </div>
@@ -64,29 +64,29 @@ export function MostVibey() {
 
         {/* Rank 1 */}
         <div className="order-1 lg:order-2 flex flex-col justify-end">
-          <div className="glass-card rounded-xl p-10 border border-primary/20 relative overflow-hidden group hover:bg-surface-variant/60 transition-all duration-700 min-h-[420px] flex flex-col justify-between cursor-pointer" onClick={() => rank1.vibeLabel !== 'Void' && setSelectedVibe(rank1)}>
+          <div className="glass-card rounded-xl p-6 sm:p-10 border border-primary/20 relative overflow-hidden group hover:bg-surface-variant/60 transition-all duration-700 sm:min-h-[420px] flex flex-col justify-between cursor-pointer" onClick={() => rank1.vibeLabel !== 'Void' && setSelectedVibe(rank1)}>
             <div className="absolute -top-24 -left-24 w-72 h-72 vibe-pulse bg-primary rounded-full animate-pulse"></div>
             <div className="absolute -bottom-24 -right-24 w-64 h-64 vibe-pulse bg-secondary-container rounded-full"></div>
             <div className="relative z-10">
-              <div className="flex justify-between items-start mb-6">
+              <div className="flex justify-between items-start mb-4 md:mb-6">
                 <span className="font-headline text-4xl sm:text-6xl italic text-primary block leading-none">01</span>
                 <Star className="text-primary scale-110 sm:scale-150" fill="currentColor" />
               </div>
-              <h3 className="font-headline text-3xl sm:text-5xl mb-4 text-on-surface leading-none line-clamp-2">{rank1.vibeLabel}</h3>
-              <p className="font-body text-primary-fixed-dim text-base sm:text-lg mb-8 italic line-clamp-3">"{rank1.aiRemix}"</p>
+              <h3 className="font-headline text-2xl sm:text-5xl mb-3 md:mb-4 text-on-surface leading-none line-clamp-2">{rank1.vibeLabel}</h3>
+              <p className="font-body text-primary-fixed-dim text-sm sm:text-lg mb-6 md:mb-8 italic line-clamp-3">"{rank1.aiRemix}"</p>
             </div>
             <div className="relative z-10">
-              <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
                 <div className="bg-black/20 p-3 sm:p-4 rounded-lg">
                   <p className="text-[10px] font-label uppercase tracking-widest text-primary-container mb-1 leading-tight">Pulse Resonance</p>
-                  <p className="text-xl sm:text-3xl font-body font-bold text-primary">{(rank1.pulseCount || 0).toLocaleString()}</p>
+                  <p className="text-lg sm:text-3xl font-body font-bold text-primary">{(rank1.pulseCount || 0).toLocaleString()}</p>
                 </div>
                 <div className="bg-black/20 p-3 sm:p-4 rounded-lg">
                   <p className="text-[10px] font-label uppercase tracking-widest text-secondary mb-1">Velocity</p>
-                  <p className="text-xl sm:text-3xl font-body font-bold text-secondary">{rank1.growthPercentage}</p>
+                  <p className="text-lg sm:text-3xl font-body font-bold text-secondary">{rank1.growthPercentage}</p>
                 </div>
               </div>
-              <button className="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary-container rounded-full font-bold uppercase tracking-widest text-sm hover:scale-[1.02] transition-transform active:scale-95">
+              <button className="w-full py-3 md:py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary-container rounded-full font-bold uppercase tracking-widest text-xs md:text-sm hover:scale-[1.02] transition-transform active:scale-95">
                 Explore Vibe
               </button>
             </div>
@@ -95,20 +95,20 @@ export function MostVibey() {
 
         {/* Rank 3 */}
         <div className="order-3 lg:order-3 flex flex-col justify-end">
-          <div className="glass-card rounded-xl p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500 cursor-pointer" onClick={() => rank3.vibeLabel !== 'Void' && setSelectedVibe(rank3)}>
-            <div className="absolute -bottom-20 -left-20 w-48 h-48 vibe-pulse bg-tertiary-container rounded-full"></div>
+          <div className="glass-card rounded-xl p-5 sm:p-8 border border-outline-variant/15 relative overflow-hidden group hover:bg-surface-variant/50 transition-all duration-500 cursor-pointer" onClick={() => rank3.vibeLabel !== 'Void' && setSelectedVibe(rank3)}>
+            <div className="absolute -bottom-16 -left-16 w-32 h-32 md:-bottom-20 md:-left-20 md:w-48 md:h-48 vibe-pulse bg-tertiary-container rounded-full"></div>
             <div className="relative z-10">
-              <span className="font-headline text-3xl md:text-4xl italic text-tertiary-dim opacity-50 block mb-4">03</span>
-              <h3 className="font-headline text-2xl md:text-3xl mb-2 text-on-surface line-clamp-2">{rank3.vibeLabel}</h3>
-              <p className="font-body text-on-surface-variant text-xs md:text-sm mb-6 leading-relaxed italic line-clamp-3">"{rank3.aiRemix}"</p>
+              <span className="font-headline text-2xl md:text-4xl italic text-tertiary-dim opacity-50 block mb-2 md:mb-4">03</span>
+              <h3 className="font-headline text-xl md:text-3xl mb-1 md:mb-2 text-on-surface line-clamp-2">{rank3.vibeLabel}</h3>
+              <p className="font-body text-on-surface-variant text-xs md:text-sm mb-4 md:mb-6 leading-relaxed italic line-clamp-3">"{rank3.aiRemix}"</p>
               <div className="flex justify-between items-end">
                 <div>
-                  <p className="text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse</p>
-                  <p className="text-2xl font-body font-bold text-on-surface">{(rank3.pulseCount || 0).toLocaleString()}</p>
+                  <p className="text-[10px] md:text-xs font-label uppercase tracking-widest text-primary-container mb-1">Pulse</p>
+                  <p className="text-lg md:text-2xl font-body font-bold text-on-surface">{(rank3.pulseCount || 0).toLocaleString()}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs font-label uppercase tracking-widest text-tertiary mb-1">Growth</p>
-                  <p className="text-lg font-body font-semibold text-tertiary">{rank3.growthPercentage}</p>
+                  <p className="text-[10px] md:text-xs font-label uppercase tracking-widest text-tertiary mb-1">Growth</p>
+                  <p className="text-base font-body font-semibold text-tertiary">{rank3.growthPercentage}</p>
                 </div>
               </div>
             </div>

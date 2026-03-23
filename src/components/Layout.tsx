@@ -62,18 +62,18 @@ export function Layout({ children, currentTab, setTab }: LayoutProps) {
           className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'most-vibey' ? 'text-secondary' : 'text-on-surface-variant'}`}
         >
           <Zap size={20} />
-          <span className="text-[10px] font-label uppercase tracking-widest">Ethers</span>
+          <span className="text-[10px] font-label uppercase tracking-widest">Most Vibey</span>
         </button>
         <button 
           onClick={() => setTab('records')}
           className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'records' ? 'text-secondary' : 'text-on-surface-variant'}`}
         >
           <Layers size={20} />
-          <span className="text-[10px] font-label uppercase tracking-widest">Vault</span>
+          <span className="text-[10px] font-label uppercase tracking-widest">Records</span>
         </button>
       </nav>
 
-      <main className="flex-grow pt-24 md:pt-28 pb-32 md:pb-20 px-4 md:px-6 max-w-7xl mx-auto w-full flex flex-col">
+      <main className="flex-grow pt-20 md:pt-28 pb-28 md:pb-20 px-4 md:px-6 max-w-7xl mx-auto w-full flex flex-col">
         {children}
       </main>
     </div>

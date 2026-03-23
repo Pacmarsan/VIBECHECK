@@ -92,12 +92,12 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
           className="absolute inset-0 bg-background/80 backdrop-blur-md"
         />
         
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-4xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto glass-card rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl z-10 p-5 sm:p-8 md:p-12 custom-scrollbar"
-        >
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="relative w-full max-w-4xl max-h-[92vh] md:max-h-[90vh] overflow-y-auto glass-card rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl z-10 p-4 sm:p-8 md:p-12 custom-scrollbar"
+          >
           <VibeImageTemplate vibe={vibe} ref={templateRef} />
 
           <button 
@@ -111,10 +111,10 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
             <span className="px-4 py-1 rounded-full border border-secondary/30 text-secondary text-xs font-label uppercase tracking-widest mb-6 inline-block">
               Recorded Frequency
             </span>
-            <h2 className="text-3xl sm:text-5xl md:text-7xl font-headline italic mb-4 leading-tight">
+            <h2 className="text-2xl sm:text-5xl md:text-7xl font-headline italic mb-3 leading-tight">
               {vibe.vibeLabel}
             </h2>
-            <p className="text-lg sm:text-xl md:text-2xl font-headline italic text-primary-dim px-4">
+            <p className="text-base sm:text-xl md:text-2xl font-headline italic text-primary-dim px-4">
               "{vibe.aiRemix}"
             </p>
 
@@ -143,13 +143,13 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
                 </button>
                 <h3 className="text-lg md:text-xl font-headline italic mb-2 relative z-10">The Pulse</h3>
               </div>
-              <div className="mt-6 relative z-10">
-                <div className="flex items-end gap-3 mb-2">
-                  <p className="text-3xl md:text-4xl font-bold text-secondary tracking-tight">{likes.toLocaleString()}</p>
-                  <p className="text-[10px] font-label uppercase tracking-widest text-secondary-dim pb-1.5">Real Resonance</p>
+              <div className="mt-4 md:mt-6 relative z-10">
+                <div className="flex items-end gap-2 md:gap-3 mb-2">
+                  <p className="text-2xl md:text-4xl font-bold text-secondary tracking-tight">{likes.toLocaleString()}</p>
+                  <p className="text-[9px] md:text-[10px] font-label uppercase tracking-widest text-secondary-dim pb-1 md:pb-1.5">Real Resonance</p>
                 </div>
-                <div className="pt-4 border-t border-white/10 mt-4">
-                  <p className="text-xl md:text-2xl font-bold mb-1 tracking-tight text-on-surface-variant">{pulseCount.toLocaleString()}</p>
+                <div className="pt-3 md:pt-4 border-t border-white/10 mt-3 md:mt-4">
+                  <p className="text-lg md:text-2xl font-bold mb-1 tracking-tight text-on-surface-variant">{pulseCount.toLocaleString()}</p>
                   <div className="flex items-center gap-2 text-[10px] font-label uppercase tracking-widest text-primary-container">
                     <span>AI Global Pulse</span>
                     <span className="bg-tertiary-dim/20 text-tertiary-dim px-2 py-0.5 rounded">{vibe.growthPercentage}</span>

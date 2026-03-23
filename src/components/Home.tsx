@@ -162,14 +162,14 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
           <Sparkles className="text-secondary opacity-80" size={32} />
         </div>
 
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-headline italic mb-6 leading-tight">
+        <h1 className="text-2xl sm:text-5xl md:text-6xl font-headline italic mb-6 leading-tight">
           What is the current <span className="text-secondary">frequency</span> of your soul?
         </h1>
         <p className="font-body text-on-surface-variant mb-12 text-lg">
           Speak freely. Let the resonance of your thoughts guide the engine.
         </p>
 
-        <div className="w-full glass-card rounded-3xl p-6 border border-white/5 flex flex-col gap-4">
+        <div className="w-full glass-card rounded-3xl p-4 sm:p-6 border border-white/5 flex flex-col gap-4">
           <textarea 
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -190,7 +190,7 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
             <Magnetic>
               <button 
                 onClick={() => { if(text.trim()) onTransmit(text) }}
-                className="bg-primary text-on-primary-container px-6 py-2.5 rounded-full font-semibold flex items-center gap-2 hover:bg-white transition-colors active:scale-95 shadow-[0_0_20px_rgba(216,230,252,0.3)] group"
+                className="bg-primary text-on-primary-container px-5 sm:px-6 py-2 sm:py-2.5 rounded-full font-semibold flex items-center gap-2 hover:bg-white transition-colors active:scale-95 shadow-[0_0_20px_rgba(216,230,252,0.3)] group"
               >
                 Transmit <Sparkles size={16} className="group-hover:rotate-12 transition-transform" />
               </button>
@@ -284,7 +284,7 @@ function VibeCard({ vibe, delay, onClick }: { vibe: any; delay: number; onClick:
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="glass-card rounded-2xl p-6 border border-white/5 hover:border-white/10 transition-colors group cursor-pointer relative"
+      className="glass-card rounded-2xl p-4 sm:p-6 border border-white/5 hover:border-white/10 transition-colors group cursor-pointer relative"
     >
       <div className="absolute top-4 right-4 z-10">
         <button 
@@ -492,18 +492,18 @@ function ResultPhase({ result }: { result: any; key?: React.Key }) {
 
       <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6 w-full mb-6">
         {/* The Pulse Card - Bento Row 1 */}
-        <div className="md:col-span-3 lg:col-span-4 glass-card rounded-3xl p-8 border border-white/5 flex flex-col justify-between group hover:border-secondary/30 transition-all bento-inner-shadow">
+        <div className="md:col-span-3 lg:col-span-4 glass-card rounded-3xl p-5 sm:p-8 border border-white/5 flex flex-col justify-between group hover:border-secondary/30 transition-all bento-inner-shadow">
           <div>
-            <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <Heart className="text-secondary" fill="currentColor" size={20} />
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Heart className="text-secondary md:w-5 md:h-5" fill="currentColor" size={18} />
             </div>
-            <h3 className="text-lg md:text-2xl font-headline italic mb-2">The Pulse</h3>
-            <p className="text-sm text-on-surface-variant leading-relaxed">
+            <h3 className="text-base md:text-2xl font-headline italic mb-2">The Pulse</h3>
+            <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
               A collective shift in boundaries is emerging worldwide.
             </p>
           </div>
-          <div className="mt-8">
-            <p className="text-3xl md:text-5xl font-bold mb-2 tracking-tighter">{(result.pulseCount || 0).toLocaleString()}</p>
+          <div className="mt-6 md:mt-8">
+            <p className="text-2xl md:text-5xl font-bold mb-2 tracking-tighter">{(result.pulseCount || 0).toLocaleString()}</p>
             <div className="flex items-center gap-2 text-[10px] font-label uppercase tracking-widest text-primary-container">
               <span>People feeling this</span>
               <span className="bg-tertiary-dim/20 text-tertiary-dim px-2 py-0.5 rounded-sm">{result.growthPercentage}</span>
@@ -512,15 +512,15 @@ function ResultPhase({ result }: { result: any; key?: React.Key }) {
         </div>
 
         {/* Echo Chamber - Bento Row 1 */}
-        <div className="md:col-span-3 lg:col-span-8 glass-card rounded-3xl p-8 border border-white/5 group hover:border-primary/20 transition-all bento-inner-shadow">
-          <div className="flex justify-between items-center mb-10">
-            <h3 className="text-lg md:text-2xl font-headline italic">Echo Chamber</h3>
+        <div className="md:col-span-3 lg:col-span-8 glass-card rounded-3xl p-5 sm:p-8 border border-white/5 group hover:border-primary/20 transition-all bento-inner-shadow">
+          <div className="flex justify-between items-center mb-6 md:mb-10">
+            <h3 className="text-base md:text-2xl font-headline italic">Echo Chamber</h3>
             <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant opacity-50">Live Consensus</span>
           </div>
           
           <div className="space-y-4 md:space-y-6 border-l-2 border-primary/10 pl-4 md:pl-8">
             {result.realVoices && result.realVoices.map((voice: string, idx: number) => (
-              <p key={idx} className="text-sm md:text-xl font-headline italic text-primary-dim group-hover:text-primary transition-colors leading-relaxed">
+              <p key={idx} className="text-xs md:text-xl font-headline italic text-primary-dim group-hover:text-primary transition-colors leading-relaxed">
                 "{voice}"
               </p>
             ))}
@@ -528,31 +528,31 @@ function ResultPhase({ result }: { result: any; key?: React.Key }) {
         </div>
 
         {/* Sonic Resonance - Bento Row 2 Full Width */}
-        <div className="md:col-span-6 lg:col-span-12 glass-card rounded-3xl p-8 border border-white/5 bento-inner-shadow">
-          <div className="flex justify-between items-center mb-8">
+        <div className="md:col-span-6 lg:col-span-12 glass-card rounded-3xl p-5 sm:p-8 border border-white/5 bento-inner-shadow">
+          <div className="flex justify-between items-center mb-6 md:mb-8">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                 <Music size={14} className="text-primary" />
               </div>
-              <h3 className="text-lg md:text-2xl font-headline italic">Sonic Resonance</h3>
+              <h3 className="text-base md:text-2xl font-headline italic">Sonic Resonance</h3>
             </div>
             <span className="text-[10px] font-label uppercase tracking-widest text-on-surface-variant opacity-50">Recommended Tracks</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
             {result.musicRecommendations && result.musicRecommendations.map((track: any, idx: number) => (
               <a 
                 key={idx} 
                 href={`https://open.spotify.com/search/${encodeURIComponent(track.title + ' ' + track.artist)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-5 bg-white/[0.03] p-5 rounded-2xl hover:bg-white/[0.08] hover:border-white/10 border border-transparent transition-all group/track"
+                className="flex items-center gap-4 md:gap-5 bg-white/[0.03] p-4 md:p-5 rounded-2xl hover:bg-white/[0.08] hover:border-white/10 border border-transparent transition-all group/track"
               >
-                <div className="w-12 h-12 shrink-0 rounded-xl bg-secondary-container/20 flex items-center justify-center text-secondary group-hover/track:scale-110 transition-transform shadow-lg">
-                   <Music size={20} />
+                <div className="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-xl bg-secondary-container/20 flex items-center justify-center text-secondary group-hover/track:scale-110 transition-transform shadow-lg">
+                   <Music size={16} className="md:w-5 md:h-5" />
                 </div>
-                  <div>
-                    <p className="font-headline italic text-on-surface text-base md:text-xl leading-tight group-hover/track:text-secondary transition-colors">{track.title}</p>
-                    <p className="text-[10px] md:text-sm text-on-surface-variant font-body opacity-70 mt-1">{track.artist}</p>
+                  <div className="overflow-hidden">
+                    <p className="font-headline italic text-on-surface text-sm md:text-xl leading-tight group-hover/track:text-secondary transition-colors truncate md:whitespace-normal">{track.title}</p>
+                    <p className="text-[10px] md:text-sm text-on-surface-variant font-body opacity-70 mt-1 truncate md:whitespace-normal">{track.artist}</p>
                   </div>
               </a>
             ))}
