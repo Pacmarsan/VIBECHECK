@@ -96,7 +96,7 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-4xl max-h-[92vh] md:max-h-[90vh] overflow-y-auto glass-card rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl z-10 p-4 sm:p-8 md:p-12 custom-scrollbar"
+            className="relative w-full max-w-4xl max-h-[92vh] md:max-h-[90vh] overflow-y-auto glass-card rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl z-10 p-4 sm:p-8 md:p-12 custom-scrollbar backdrop-blur-lg md:backdrop-blur-xl"
           >
           <VibeImageTemplate vibe={vibe} ref={templateRef} />
 

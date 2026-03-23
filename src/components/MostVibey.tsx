@@ -65,8 +65,8 @@ export function MostVibey() {
         {/* Rank 1 */}
         <div className="order-1 lg:order-2 flex flex-col justify-end">
           <div className="glass-card rounded-xl p-6 sm:p-10 border border-primary/20 relative overflow-hidden group hover:bg-surface-variant/60 transition-all duration-700 sm:min-h-[420px] flex flex-col justify-between cursor-pointer" onClick={() => rank1.vibeLabel !== 'Void' && setSelectedVibe(rank1)}>
-            <div className="absolute -top-24 -left-24 w-72 h-72 vibe-pulse bg-primary rounded-full animate-pulse"></div>
-            <div className="absolute -bottom-24 -right-24 w-64 h-64 vibe-pulse bg-secondary-container rounded-full"></div>
+            <div className="absolute -top-16 -left-16 w-48 h-48 sm:-top-24 sm:-left-24 sm:w-72 sm:h-72 vibe-pulse bg-primary rounded-full animate-pulse"></div>
+            <div className="absolute -bottom-16 -right-16 w-40 h-40 sm:-bottom-24 sm:-right-24 sm:w-64 sm:h-64 vibe-pulse bg-secondary-container rounded-full"></div>
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-4 md:mb-6">
                 <span className="font-headline text-4xl sm:text-6xl italic text-primary block leading-none">01</span>

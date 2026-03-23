@@ -155,7 +155,7 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
       className="w-full flex flex-col items-center text-center relative z-10 pb-20"
     >
       <div className="w-full max-w-3xl flex flex-col items-center">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 vibe-pulse bg-secondary-container rounded-full mix-blend-screen -z-10"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 sm:w-64 sm:h-64 vibe-pulse bg-secondary-container rounded-full mix-blend-screen -z-10"></div>
         
         <div className="w-24 h-24 rounded-full border border-white/10 flex items-center justify-center mb-12 relative">
           <div className="absolute inset-0 rounded-full border border-secondary/30 animate-ping opacity-20"></div>
@@ -329,7 +329,7 @@ function ProcessingPhase({ input }: { input: string; key?: React.Key }) {
       exit={{ opacity: 0 }}
       className="w-full max-w-2xl flex flex-col items-center relative z-10"
     >
-      <div className="absolute top-20 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 vibe-pulse bg-primary/20 rounded-full mix-blend-screen -z-10"></div>
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-96 sm:h-96 vibe-pulse bg-primary/20 rounded-full mix-blend-screen -z-10"></div>
       
       <div className="w-32 h-32 rounded-full bg-primary flex items-center justify-center mb-16 shadow-[0_0_50px_rgba(216,230,252,0.4)]">
         <Sparkles className="text-on-primary-container" size={40} />
@@ -458,7 +458,7 @@ function ResultPhase({ result }: { result: any; key?: React.Key }) {
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-5xl flex flex-col items-center relative z-10 pt-10"
     >
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] vibe-pulse bg-secondary-container/10 rounded-full -z-10"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] sm:w-[800px] sm:h-[800px] vibe-pulse bg-secondary-container/10 rounded-full -z-10"></div>
 
       <VibeImageTemplate vibe={result} ref={templateRef} />
 
