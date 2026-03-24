@@ -66,7 +66,7 @@ function Magnetic({ children }: { children: React.ReactNode }) {
 
 type HomePhase = 'input' | 'processing' | 'result';
 
-export function Home() {
+export function Home({ setTab }: { setTab?: (tab: string) => void }) {
   const [phase, setPhase] = useState<HomePhase>('input');
   const [vibeResult, setVibeResult] = useState<any>(null);
   const [currentInput, setCurrentInput] = useState('');
@@ -106,7 +106,7 @@ export function Home() {
   return (
     <div className="flex-grow flex flex-col items-center justify-start w-full relative pt-8 md:pt-16">
       <AnimatePresence mode="wait">
-        {phase === 'input' && <InputPhase key="input" onTransmit={handleTransmit} />}
+        {phase === 'input' && <InputPhase key="input" onTransmit={handleTransmit} setTab={setTab} />}
         {phase === 'processing' && <ProcessingPhase key="processing" input={currentInput} />}
         {phase === 'result' && vibeResult && <ResultPhase key="result" result={vibeResult} />}
       </AnimatePresence>
@@ -114,7 +114,7 @@ export function Home() {
   );
 }
 
-function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void> | void; key?: React.Key }) {
+function InputPhase({ onTransmit, setTab }: { onTransmit: (text: string) => Promise<void> | void; setTab?: (tab: string) => void; key?: React.Key }) {
   const [text, setText] = useState('');
   const [allVibes, setAllVibes] = useState<any[]>([]);
   const [trendingVibes, setTrendingVibes] = useState<any[]>([]);
@@ -211,7 +211,7 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
         return valB - valA;
       });
     }
-    setTrendingVibes(sorted.slice(0, 100));
+    setTrendingVibes(sorted.slice(0, 3));
   }, [allVibes, sortBy]);
 
   return (
@@ -287,7 +287,17 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
       <div className="w-full max-w-5xl space-y-16 text-left">
         <section>
           <div className="flex items-center justify-between mb-2 pb-4 border-b border-white/5">
-            <h2 className="text-xl md:text-3xl font-headline italic text-on-surface">The Trending Ethers</h2>
+            <div className="flex items-center gap-4">
+              <h2 className="text-xl md:text-3xl font-headline italic text-on-surface">The Trending Ethers</h2>
+              {setTab && (
+                <button 
+                  onClick={() => setTab('most-vibey')}
+                  className="flex items-center gap-1 pt-1 text-[10px] md:text-xs font-label uppercase tracking-widest text-secondary hover:text-white transition-colors"
+                >
+                  View More <ArrowRight size={14} />
+                </button>
+              )}
+            </div>
             <div className="flex items-center gap-4 text-[10px] font-label tracking-widest">
               <button 
                 onClick={() => setSortBy('resonance')}

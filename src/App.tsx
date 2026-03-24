@@ -16,7 +16,7 @@ export default function App() {
   return (
     <Layout currentTab={currentTab} setTab={setCurrentTab}>
       <AnimatePresence mode="wait">
-        {currentTab === 'home' && <Home key="home" />}
+        {currentTab === 'home' && <Home key="home" setTab={setCurrentTab} />}
         {currentTab === 'most-vibey' && <MostVibey key="most-vibey" />}
         {currentTab === 'records' && <Records key="records" />}
       </AnimatePresence>

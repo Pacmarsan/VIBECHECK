@@ -8,7 +8,7 @@ export function MostVibey() {
   const [selectedVibe, setSelectedVibe] = useState<any>(null);
 
   useEffect(() => {
-    fetch('/api/vibes?limit=20')
+    fetch('/api/vibes?limit=100')
       .then(res => res.json())
       .then(data => {
         // Sort by resonance for "Most Vibey"
@@ -21,7 +21,7 @@ export function MostVibey() {
   const rank1 = vibes[0] || { vibeLabel: 'Void', aiRemix: 'Nothing here.', pulseCount: 0, growthPercentage: '0%' };
   const rank2 = vibes[1] || { vibeLabel: 'Void', aiRemix: 'Nothing here.', pulseCount: 0, growthPercentage: '0%' };
   const rank3 = vibes[2] || { vibeLabel: 'Void', aiRemix: 'Nothing here.', pulseCount: 0, growthPercentage: '0%' };
-  const theRest = vibes.slice(3, 8);
+  const theRest = vibes.slice(3, 100);
 
   return (
     <motion.div 
