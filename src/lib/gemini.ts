@@ -15,10 +15,12 @@ export async function processVibe(input: string) {
   try {
     const intelResponse = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: queryIntelligencePrompt(input),
+      contents: [{ role: 'user', parts: [{ text: queryIntelligencePrompt(input) }] }],
       config: { responseMimeType: 'application/json' }
     });
-    intelligence = JSON.parse(intelResponse.text || "{}");
+    console.log("Intel Response Raw:", intelResponse);
+    const text = typeof intelResponse.text === 'function' ? await intelResponse.text() : intelResponse.text;
+    intelligence = JSON.parse(text || "{}");
   } catch (e) {
     console.error("Query Intelligence Error:", e);
     intelligence = {
@@ -69,13 +71,15 @@ RESPOND ONLY IN RAW JSON. DO NOT WRAP WITH MARKDOWN LIKE \`\`\`json.`;
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: prompt,
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
       config: {
         responseMimeType: 'application/json',
       }
     });
 
-    const respText = response.text || "{}";
+    console.log("Final Synthesis Response Raw:", response);
+    const text = typeof response.text === 'function' ? await response.text() : response.text;
+    const respText = text || "{}";
     const result = JSON.parse(respText);
 
     return {
@@ -87,7 +91,8 @@ RESPOND ONLY IN RAW JSON. DO NOT WRAP WITH MARKDOWN LIKE \`\`\`json.`;
       supportMessage: result.supportMessage || "I see you. You're doing exactly what you're meant to be doing. Keep breathing forward.",
       musicRecommendations: result.musicRecommendations || [
         { title: "432Hz White Noise", artist: "The Void" }
-      ]
+      ],
+      tone: result.tone || intelligence.tone || "Neutral"
     };
   } catch (e) {
     console.error("Gemini Error:", e);
@@ -101,7 +106,8 @@ RESPOND ONLY IN RAW JSON. DO NOT WRAP WITH MARKDOWN LIKE \`\`\`json.`;
       supportMessage: "The void acknowledges your frequency. Stay grounded.",
       musicRecommendations: [
         { title: "Static", artist: "Unknown" }
-      ]
+      ],
+      tone: "Neutral"
     };
   }
 }

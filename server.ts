@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import supabase from './db.js';
 import { processVibe } from './src/lib/gemini.js';
 import { generateId } from './src/lib/utils.js';
+import { generateVibeAudio, transcribeAudio } from './src/lib/elevenlabs.js';
 
 dotenv.config();
 
@@ -35,27 +36,38 @@ app.post('/api/vibecheck', async (req, res) => {
     const result = await processVibe(input);
     
     const vibeId = generateId();
-    
-    // Save to Supabase (PostgreSQL)
-    const { error: dbError } = await supabase
+    const insertPayload = {
+      id: vibeId,
+      user_id: userId,
+      vibe_label: result.vibeLabel,
+      pulse_count: result.pulseCount,
+      growth_percentage: result.growthPercentage,
+      real_voices: result.realVoices, 
+      ai_remix: result.aiRemix,
+      music_recommendations: result.musicRecommendations,
+      support_message: result.supportMessage || '',
+      original_input: input,
+      tone: result.tone || 'Neutral',
+      likes: 0
+    };
+
+    let { error: dbError } = await supabase
       .from('vibes')
-      .insert({
-        id: vibeId,
-        user_id: userId,
-        vibe_label: result.vibeLabel,
-        pulse_count: result.pulseCount,
-        growth_percentage: result.growthPercentage,
-        real_voices: result.realVoices,
-        ai_remix: result.aiRemix,
-        support_message: result.supportMessage || '',
-        original_input: input,
-        music_recommendations: result.musicRecommendations,
-        likes: 0
-      });
+      .insert([insertPayload]);
+
+    // Fallback: If 'tone' column is missing, retry without it
+    if (dbError && dbError.message.toLowerCase().includes("tone")) {
+      console.warn("Supabase Insert Error: 'tone' column not found. Retrying insert without 'tone' column...");
+      const { tone, ...restPayload } = insertPayload;
+      const fallbackResult = await supabase
+        .from('vibes')
+        .insert([restPayload]);
+      dbError = fallbackResult.error;
+    }
 
     if (dbError) {
       console.error('Supabase Insert Error:', dbError);
-      throw new Error(dbError.message);
+      return res.status(500).json({ error: 'Failed to save vibe' });
     }
 
     res.json({
@@ -66,6 +78,48 @@ app.post('/api/vibecheck', async (req, res) => {
   } catch (error) {
     console.error('Core orchestration failed:', error);
     res.status(500).json({ error: 'Failed to process vibe' });
+  }
+});
+
+// NEW ElevenLabs TTS Endpoint
+app.post('/api/vibe/speak', async (req, res) => {
+  try {
+    const { text, tone } = req.body;
+    if (!text) {
+      return res.status(400).json({ error: 'Missing text' });
+    }
+
+    console.log(`[ElevenLabs] Generating audio for tone "${tone}": "${text.slice(0, 30)}..."`);
+    const audioBuffer = await generateVibeAudio(text, tone);
+
+    res.set({
+      'Content-Type': 'audio/mpeg',
+      'Content-Length': audioBuffer.byteLength,
+      'Cache-Control': 'public, max-age=3600'
+    });
+
+    res.send(Buffer.from(audioBuffer));
+  } catch (error: any) {
+    console.error('ElevenLabs synthesis failed:', error);
+    res.status(500).json({ error: 'Failed to generate audio' });
+  }
+});
+
+// NEW ElevenLabs STT Endpoint
+app.post('/api/vibe/listen', async (req, res) => {
+  try {
+    const { audioBase64, mimeType } = req.body;
+    if (!audioBase64) {
+      return res.status(400).json({ error: 'Missing audio metadata' });
+    }
+
+    console.log(`[ElevenLabs STT] Transcribing audio snippet...`);
+    const text = await transcribeAudio(audioBase64, mimeType || 'audio/webm');
+    
+    res.json({ text });
+  } catch (error: any) {
+    console.error('ElevenLabs Transcription failed:', error);
+    res.status(500).json({ error: 'Failed to transcribe audio' });
   }
 });
 

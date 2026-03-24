@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Heart, Music, Twitter, Facebook, Link, Check, Sparkles, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { X, Heart, Music, Twitter, Facebook, Link, Check, Sparkles, Image as ImageIcon, Loader2, Volume2, Pause } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { toPng } from 'html-to-image';
 import { VibeImageTemplate } from './VibeImageTemplate';
@@ -10,6 +10,9 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
   const [likes, setLikes] = useState(vibe?.likes || 0);
   const [hasReacted, setHasReacted] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const templateRef = useRef<HTMLDivElement>(null);
 
   const handleReact = async () => {
@@ -23,6 +26,44 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ vibeId: vibe.id, userId, reactionType: 'heart' })
     }).catch(() => { setLikes((l: number) => l - 1); setHasReacted(false); });
+  };
+
+  const handlePlayAudio = async () => {
+    if (isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    if (audioRef.current?.src) {
+      audioRef.current.play();
+      setIsPlaying(true);
+      return;
+    }
+
+    try {
+      setIsAudioLoading(true);
+      const response = await fetch('/api/vibe/speak', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: vibe.aiRemix, tone: vibe.tone || 'Neutral' })
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch audio');
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      audio.onended = () => setIsPlaying(false);
+      audio.play();
+      setIsPlaying(true);
+    } catch (err) {
+      console.error('Audio playback failed', err);
+    } finally {
+      setIsAudioLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -117,6 +158,25 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
             <p className="text-base sm:text-xl md:text-2xl font-headline italic text-primary-dim px-4">
               "{vibe.aiRemix}"
             </p>
+
+            <div className="flex justify-center mt-6">
+              <button 
+                onClick={handlePlayAudio}
+                disabled={isAudioLoading}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary hover:bg-secondary/20 transition-all group active:scale-95 shadow-[0_0_20px_rgba(253,119,196,0.1)]"
+              >
+                {isAudioLoading ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : isPlaying ? (
+                  <Pause size={16} />
+                ) : (
+                  <Volume2 size={16} className="group-hover:scale-110 transition-transform" />
+                )}
+                <span className="text-[10px] font-label uppercase tracking-widest font-bold">
+                  {isPlaying ? 'Pause Frequency' : 'Listen to Vibe'}
+                </span>
+              </button>
+            </div>
 
             {vibe.supportMessage && (
               <div className="mt-8 relative max-w-2xl mx-auto p-4 sm:p-6 rounded-2xl bg-secondary/10 border border-secondary/20 backdrop-blur-md text-left">

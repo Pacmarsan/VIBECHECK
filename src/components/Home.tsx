@@ -88,6 +88,9 @@ export function Home() {
         body: JSON.stringify({ input, userId })
       });
       const data = await res.json();
+      if (data && data.error) {
+        throw new Error(data.error);
+      }
       setVibeResult(data);
     } catch (err) {
       console.error(err);
@@ -119,12 +122,76 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
   const [selectedVibe, setSelectedVibe] = useState<any>(null);
   const [sortBy, setSortBy] = useState<'resonance' | 'velocity'>('resonance');
 
+  // Voice Input State
+  const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<BlobPart[]>([]);
+
+  const handleMicClick = async () => {
+    if (isRecording) {
+      if (mediaRecorderRef.current) {
+        mediaRecorderRef.current.stop();
+        setIsRecording(false);
+      }
+    } else {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+        mediaRecorderRef.current = mediaRecorder;
+        audioChunksRef.current = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunksRef.current.push(e.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          const reader = new FileReader();
+          reader.readAsDataURL(audioBlob);
+          reader.onloadend = async () => {
+            const base64data = reader.result?.toString().split(',')[1];
+            if (base64data) {
+              setIsTranscribing(true);
+              try {
+                const res = await fetch('/api/vibe/listen', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ audioBase64: base64data, mimeType: 'audio/webm' })
+                });
+                const data = await res.json();
+                if (data.text) {
+                  setText(prev => prev + (prev ? " " : "") + data.text);
+                }
+              } catch (err) {
+                console.error("Transcription error:", err);
+              } finally {
+                setIsTranscribing(false);
+              }
+            }
+          };
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        setIsRecording(true);
+      } catch (err) {
+        console.error("Mic access denied or error:", err);
+        alert("Microphone access is required to dictate your vibe.");
+      }
+    }
+  };
+
   useEffect(() => {
-    fetch('/api/vibes?limit=20')
+    fetch('/api/vibes?limit=100')
       .then(res => res.json())
       .then(data => {
-        setAllVibes(data);
-        setNewVibes([...data].slice(0, 3));
+        if (Array.isArray(data)) {
+          setAllVibes(data);
+          setNewVibes([...data].slice(0, 3));
+        } else {
+          console.error("Expected array but got:", data);
+        }
       })
       .catch(err => console.error("Failed to fetch vibes", err));
   }, []);
@@ -144,7 +211,7 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
         return valB - valA;
       });
     }
-    setTrendingVibes(sorted.slice(0, 3));
+    setTrendingVibes(sorted.slice(0, 100));
   }, [allVibes, sortBy]);
 
   return (
@@ -183,9 +250,18 @@ function InputPhase({ onTransmit }: { onTransmit: (text: string) => Promise<void
             className="w-full bg-transparent border-none outline-none resize-none h-24 md:h-32 text-base md:text-lg placeholder:text-on-surface-variant/50"
           />
           <div className="flex justify-between items-center pt-4 border-t border-white/5">
-            <div className="flex gap-4 text-on-surface-variant">
-              <button className="hover:text-primary transition-colors"><Mic size={20} /></button>
-              <button className="hover:text-primary transition-colors"><Paperclip size={20} /></button>
+            <div className="flex gap-4 items-center">
+              <button 
+                onClick={handleMicClick} 
+                disabled={isTranscribing}
+                className={`transition-all flex items-center justify-center w-10 h-10 rounded-full ${
+                  isRecording ? 'bg-secondary/20 text-secondary animate-pulse' : 
+                  isTranscribing ? 'text-primary' : 'hover:bg-white/5 text-on-surface-variant hover:text-primary'
+                }`}
+                title={isRecording ? "Stop recording" : "Record vibe"}
+              >
+                {isTranscribing ? <Loader2 size={20} className="animate-spin" /> : <Mic size={20} />}
+              </button>
             </div>
             <Magnetic>
               <button 

@@ -39,11 +39,11 @@ export const VibeImageTemplate = forwardRef<HTMLDivElement, VibeImageTemplatePro
           {/* Main Content Area - Center using geometric absolute bounds instead of flex-inset */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] flex flex-col items-center justify-center z-10 text-center">
             <div className={vibe.supportMessage ? "mb-6 w-full" : "mb-12 w-full"}>
-              <h1 className={`${vibe.vibeLabel.length > 20 ? 'text-[70px]' : (vibe.supportMessage ? 'text-[80px]' : 'text-[90px]')} leading-[1.1] font-bold italic mb-4 w-full tracking-tight text-white drop-shadow-2xl`}>
-                "{vibe.vibeLabel}"
+              <h1 className={`${(vibe.vibeLabel || "").length > 20 ? 'text-[70px]' : (vibe.supportMessage ? 'text-[80px]' : 'text-[90px]')} leading-[1.1] font-bold italic mb-4 w-full tracking-tight text-white drop-shadow-2xl`}>
+                "{vibe.vibeLabel || "Void Protocol"}"
               </h1>
               <p className={`${vibe.supportMessage ? 'text-3xl' : 'text-4xl'} italic text-primary-dim opacity-90 w-full leading-relaxed drop-shadow-md`}>
-                "{vibe.aiRemix}"
+                "{vibe.aiRemix || "Silence is the frequency."}"
               </p>
             </div>
 
