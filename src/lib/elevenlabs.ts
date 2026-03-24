@@ -42,31 +42,35 @@ export async function generateVibeAudio(text: string, tone: string) {
   return await response.arrayBuffer();
 }
 
+import FormData from 'form-data';
+
 export async function transcribeAudio(base64Data: string, mimeType: string): Promise<string> {
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) {
     throw new Error("ELEVENLABS_API_KEY is missing");
   }
 
-  // Convert base64 to native Blob for FormData upload
   const buffer = Buffer.from(base64Data, 'base64');
-  const blob = new Blob([buffer], { type: mimeType });
-
   const formData = new FormData();
-  formData.append('file', blob, 'recording.webm');
+  
+  formData.append('file', buffer, {
+    filename: 'recording.webm',
+    contentType: mimeType,
+  });
   formData.append('model_id', 'scribe_v1');
 
   const response = await fetch('https://api.elevenlabs.io/v1/speech-to-text', {
     method: 'POST',
     headers: {
       'xi-api-key': apiKey,
+      ...formData.getHeaders(),
     },
-    body: formData as any,
+    body: formData.getBuffer(),
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(`ElevenLabs STT error: ${JSON.stringify(errorData)}`);
+    const errorData = await response.text();
+    throw new Error(`ElevenLabs STT error: ${errorData}`);
   }
 
   const data = await response.json();

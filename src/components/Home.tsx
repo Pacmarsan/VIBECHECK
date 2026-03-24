@@ -161,7 +161,13 @@ function InputPhase({ onTransmit, setTab }: { onTransmit: (text: string) => Prom
                 });
                 const data = await res.json();
                 if (data.text) {
-                  setText(prev => prev + (prev ? " " : "") + data.text);
+                  setText(prev => {
+                    const newText = prev + (prev ? " " : "") + data.text;
+                    setTimeout(() => {
+                      if (newText.trim()) onTransmit(newText);
+                    }, 50);
+                    return newText;
+                  });
                 }
               } catch (err) {
                 console.error("Transcription error:", err);

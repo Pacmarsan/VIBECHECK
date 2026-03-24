@@ -46,7 +46,10 @@ export function VibeModal({ vibe, onClose }: { vibe: any, onClose: () => void })
       const response = await fetch('/api/vibe/speak', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: vibe.aiRemix, tone: vibe.tone || 'Neutral' })
+        body: JSON.stringify({ 
+          text: vibe.aiRemix + (vibe.supportMessage ? " ... " + vibe.supportMessage : ""), 
+          tone: vibe.tone || 'Neutral' 
+        })
       });
 
       if (!response.ok) throw new Error('Failed to fetch audio');
